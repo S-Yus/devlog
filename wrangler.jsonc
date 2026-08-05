@@ -1,7 +1,7 @@
 {
   "name": "yusei-dev",
   "pages_build_output_dir": "./dist",
-  "compatibility_date": "2026-08-06",
+  "compatibility_date": "2026-07-22",
   "d1_databases": [
     {
       "binding": "DB",
