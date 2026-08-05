@@ -13,11 +13,5 @@ const entries = (await getCollection('guides')).filter(isVisible).sort(newestFir
     <h1>Guides</h1>
     <p>設定，導入，トラブルシューティング。第三者が再現できる状態まで確認したもの。</p>
   </header>
-  <dl class="definition-table content-standard">
-    <div><dt>Setup</dt><dd>インストール，初期設定，環境構築。</dd></div>
-    <div><dt>How-to</dt><dd>目的と完了条件が明確な操作手順。</dd></div>
-    <div><dt>Troubleshooting</dt><dd>エラー，原因，解決方法，確認結果。</dd></div>
-    <div><dt>条件</dt><dd>同じ環境で手順をやり直し，結果を確認していること。</dd></div>
-  </dl>
   <PostList posts={entries.map((entry) => ({ ...entry.data, href: `/guides/${entry.id}/`, draft: entry.data.draft }))} />
 </BaseLayout>
