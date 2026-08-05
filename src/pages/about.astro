@@ -4,14 +4,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="About" description="Yusei.devと運営者Yuseiについて。">
   <header class="page-header">
-    <p class="eyebrow">About this site</p>
+    <p class="eyebrow">ABOUT</p>
     <h1>About</h1>
-    <p>Yusei.devは、技術ツールの使い方と、開発・研究の過程を記録する個人サイトです。</p>
+    <p>Yuseiの個人サイト。</p>
   </header>
-  <div class="prose-page">
-    <h2>書いていること</h2>
-    <p>Guideでは再現可能な完成版の手順を、Devlogでは検証途中の判断や失敗を公開します。結論だけでなく、そこに至った条件や制約も残すことを大切にしています。</p>
-    <h2>運営方針</h2>
-    <p>広告、アフィリエイト、外部トラッキングは使用しません。本文はMarkdownで管理し、サイト自体も小さく高速に保ちます。</p>
-  </div>
+  <dl class="definition-table">
+    <div><dt>Guides</dt><dd>確認が済んだ手順。</dd></div>
+    <div><dt>Devlog</dt><dd>開発中の記録。</dd></div>
+    <div><dt>Projects</dt><dd>作ったもの。</dd></div>
+    <div><dt>Tracking</dt><dd>なし。広告、Cookieバナーも置きません。</dd></div>
+  </dl>
 </BaseLayout>

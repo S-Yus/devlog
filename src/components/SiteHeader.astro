@@ -3,9 +3,10 @@ const links = [
   { href: '/guides/', label: 'Guides' },
   { href: '/devlog/', label: 'Devlog' },
   { href: '/projects/', label: 'Projects' },
-  { href: '/search/', label: 'Search' },
   { href: '/about/', label: 'About' },
 ];
+
+const currentPath = Astro.url.pathname;
 ---
 
 <header class="site-header" data-pagefind-ignore>
@@ -14,9 +15,14 @@ const links = [
     <nav aria-label="メインナビゲーション">
       <ul>
         {links.map((link) => (
-          <li><a href={link.href}>{link.label}</a></li>
+          <li><a href={link.href} aria-current={currentPath.startsWith(link.href) ? 'page' : undefined}>{link.label}</a></li>
         ))}
       </ul>
     </nav>
+    <form class="global-search" action="/search/" method="get" role="search">
+      <label class="visually-hidden" for="global-search-input">記事を検索</label>
+      <input id="global-search-input" name="q" type="search" placeholder="サイト内検索" autocomplete="off" />
+      <button type="submit">検索</button>
+    </form>
   </div>
 </header>

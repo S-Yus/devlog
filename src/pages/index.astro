@@ -4,31 +4,39 @@ import PostList from '../components/PostList.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { isVisible, newestFirst } from '../lib/content';
 
-const guides = (await getCollection('guides')).filter(isVisible).sort(newestFirst).slice(0, 4);
-const devlog = (await getCollection('devlog')).filter(isVisible).sort(newestFirst).slice(0, 4);
-const description = '技術ツールの実行手順、トラブルシューティング、開発・研究の記録を公開しています。';
+const guideEntries = (await getCollection('guides')).filter(isVisible).sort(newestFirst);
+const devlogEntries = (await getCollection('devlog')).filter(isVisible).sort(newestFirst);
+const guides = guideEntries.slice(0, 5);
+const devlog = devlogEntries.slice(0, 5);
+const description = 'Yuseiの技術メモ。確認済みの手順と、開発中の記録。';
 ---
 
 <BaseLayout description={description}>
   <section class="hero">
-    <p class="eyebrow">Engineering notes / Japan</p>
-    <h1>Yusei.dev</h1>
-    <p>{description}</p>
+    <div>
+      <p class="eyebrow">INDEX / YUSEI.DEV</p>
+      <h1>技術メモ</h1>
+    </div>
+    <p>確認済みの手順は Guides。作業中の記録は Devlog。</p>
+    <dl class="site-stats" aria-label="公開件数">
+      <div><dt>Guides</dt><dd>{guideEntries.length}</dd></div>
+      <div><dt>Devlog</dt><dd>{devlogEntries.length}</dd></div>
+    </dl>
   </section>
 
   <div class="home-grid">
     <section aria-labelledby="latest-guides">
       <div class="section-heading">
-        <h2 id="latest-guides">最新の Guides</h2>
-        <a href="/guides/">すべて見る</a>
+        <h2 id="latest-guides">Guides / 最新</h2>
+        <a href="/guides/">一覧 →</a>
       </div>
       <PostList posts={guides.map((entry) => ({ ...entry.data, href: `/guides/${entry.id}/`, type: 'Guide', draft: entry.data.draft }))} />
     </section>
 
     <section aria-labelledby="latest-devlog">
       <div class="section-heading">
-        <h2 id="latest-devlog">最新の Devlog</h2>
-        <a href="/devlog/">すべて見る</a>
+        <h2 id="latest-devlog">Devlog / 最新</h2>
+        <a href="/devlog/">一覧 →</a>
       </div>
       <PostList posts={devlog.map((entry) => ({ ...entry.data, href: `/devlog/${entry.id}/`, type: 'Devlog', draft: entry.data.draft }))} />
     </section>
@@ -36,23 +44,23 @@ const description = '技術ツールの実行手順、トラブルシューテ�
 
   <section class="split-section" aria-labelledby="current-interests">
     <div>
-      <p class="eyebrow">Current interests</p>
-      <h2 id="current-interests">現在の技術的関心</h2>
+      <p class="eyebrow">CURRENT</p>
+      <h2 id="current-interests">いま触っているもの</h2>
     </div>
     <ul class="plain-list">
-      <li>ローカルファーストな開発環境</li>
-      <li>AIを利用したソフトウェア開発</li>
-      <li>再現可能な技術ドキュメント</li>
-      <li>小さく保守できるWebサイト</li>
+      <li>WSL2 / Linux</li>
+      <li>AIを使った開発</li>
+      <li>技術文書</li>
+      <li>小さいWebサイト</li>
     </ul>
   </section>
 
   <section class="project-callout" aria-labelledby="projects-heading">
     <div>
-      <p class="eyebrow">Selected work</p>
+      <p class="eyebrow">WORK</p>
       <h2 id="projects-heading">Projects</h2>
-      <p>制作物と技術的な試行を、背景や判断とともに順次追加します。</p>
+      <p>準備中。</p>
     </div>
-    <a class="text-link" href="/projects/">Projectsを見る →</a>
+    <a class="text-link" href="/projects/">開く →</a>
   </section>
 </BaseLayout>
