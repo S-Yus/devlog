@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import CodeCopy from '../components/CodeCopy.astro';
 import BaseLayout from './BaseLayout.astro';
 import { formatDate } from '../lib/content';
 import '../styles/article.css';
@@ -82,4 +83,5 @@ const structuredData = {
       <slot />
     </div>
   </article>
+  <CodeCopy />
 </BaseLayout>

@@ -1,0 +1,49 @@
+<script>
+  const copyText = async (text: string) => {
+    if (!navigator.clipboard?.writeText) throw new Error('Clipboard API is unavailable');
+    await navigator.clipboard.writeText(text);
+  };
+
+  document.querySelectorAll<HTMLPreElement>('.article-body pre').forEach((pre, index) => {
+    const code = pre.querySelector('code');
+    if (!code || pre.dataset.copyReady === 'true') return;
+
+    pre.dataset.copyReady = 'true';
+
+    const wrapper = document.createElement('div');
+    const toolbar = document.createElement('div');
+    const status = document.createElement('span');
+    const button = document.createElement('button');
+    let statusTimer: number | undefined;
+
+    wrapper.className = 'code-block';
+    toolbar.className = 'code-toolbar';
+    status.className = 'copy-status';
+    status.id = `copy-status-${index}`;
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    button.className = 'copy-button';
+    button.type = 'button';
+    button.textContent = 'コピー';
+    button.setAttribute('aria-describedby', status.id);
+
+    button.addEventListener('click', async () => {
+      window.clearTimeout(statusTimer);
+
+      try {
+        await copyText(code.textContent ?? '');
+        status.textContent = 'コピーしました';
+      } catch {
+        status.textContent = 'コピーできませんでした';
+      }
+
+      statusTimer = window.setTimeout(() => {
+        status.textContent = '';
+      }, 2400);
+    });
+
+    pre.before(wrapper);
+    toolbar.append(status, button);
+    wrapper.append(toolbar, pre);
+  });
+</script>
