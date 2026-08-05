@@ -27,7 +27,7 @@ const description = 'Yuseiの技術メモ。確認済みの手順と，開発中
   <div class="home-grid">
     <section aria-labelledby="latest-guides">
       <div class="section-heading">
-        <h2 id="latest-guides">Guides / Latest</h2>
+        <h2 id="latest-guides">Guides</h2>
         <a href="/guides/">一覧 →</a>
       </div>
       <PostList posts={guides.map((entry) => ({ ...entry.data, href: `/guides/${entry.id}/`, type: 'Guide', draft: entry.data.draft }))} />
@@ -35,25 +35,12 @@ const description = 'Yuseiの技術メモ。確認済みの手順と，開発中
 
     <section aria-labelledby="latest-devlog">
       <div class="section-heading">
-        <h2 id="latest-devlog">Devlog / Latest</h2>
+        <h2 id="latest-devlog">Devlog</h2>
         <a href="/devlog/">一覧 →</a>
       </div>
       <PostList posts={devlog.map((entry) => ({ ...entry.data, href: `/devlog/${entry.id}/`, type: 'Devlog', draft: entry.data.draft }))} />
     </section>
   </div>
-
-  <section class="split-section" aria-labelledby="current-interests">
-    <div>
-      <p class="eyebrow">CURRENT</p>
-      <h2 id="current-interests">いま触っているもの</h2>
-    </div>
-    <ul class="plain-list">
-      <li>WSL2 / Linux</li>
-      <li>AIを使った開発</li>
-      <li>技術文書</li>
-      <li>小さいWebサイト</li>
-    </ul>
-  </section>
 
   <section class="project-callout" aria-labelledby="projects-heading">
     <div>
