@@ -128,18 +128,16 @@ Cloudflare Dashboardの **Workers & Pages** から **Create application → Page
 
 ### いいね機能用D1の設定
 
-いいね数はCloudflare D1へ保存します。初回だけ次の設定が必要です。
+いいね数はCloudflare D1へ保存します。D1 bindingは`wrangler.jsonc`で管理し，CloudflareのGitデプロイへ反映します。初回だけ次の設定が必要です。
 
 1. Cloudflare Dashboardで **Storage & Databases → D1 SQL Database → Create database** を開く。
 2. データベース名を`yusei-dev-likes`として作成する。
 3. 作成したデータベースの **Console** を開く。
 4. `migrations/0001_create_article_likes.sql`の内容を貼り付けて実行する。
-5. **Workers & Pages → yusei-dev → Bindings → Add binding** を開く。
-6. 種別に **D1 database** を選ぶ。
-7. Variable nameを`DB`にする。
-8. D1 databaseに`yusei-dev-likes`を選び，保存する。
-9. Preview環境にも同じ`DB` bindingを設定する。
-10. **Deployments**から最新コミットを再デプロイする。
+5. `wrangler.jsonc`の`database_id`が作成したD1のUUIDと一致していることを確認する。
+6. `main`へpushし，Cloudflareの最新デプロイが成功することを確認する。
+
+`wrangler.jsonc`がCloudflare設定の管理元になります。D1を作り直した場合は，同ファイルの`database_name`と`database_id`を更新します。
 
 APIは`/api/likes`で提供されます。記事ページでは同じブラウザから同じ記事への重複評価を防ぎ，一覧ページではD1の件数を使って新しい順，古い順，高評価順に並べ替えます。ログイン機能はなく，IPアドレスは保存しません。ブラウザの保存データを消した場合やAPIを直接呼び出した場合まで完全に防ぐ仕組みではありません。
 

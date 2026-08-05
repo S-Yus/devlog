@@ -1,0 +1,12 @@
+{
+  "name": "yusei-dev",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-08-06",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "yusei-dev-likes",
+      "database_id": "bf54afe9-a96d-40ec-ba9b-c8cea8d6bcdd"
+    }
+  ]
+}
