@@ -8,7 +8,7 @@ const guideEntries = (await getCollection('guides')).filter(isVisible).sort(newe
 const devlogEntries = (await getCollection('devlog')).filter(isVisible).sort(newestFirst);
 const guides = guideEntries.slice(0, 5);
 const devlog = devlogEntries.slice(0, 5);
-const description = 'Yuseiの技術メモ。確認済みの手順と、開発中の記録。';
+const description = 'Yuseiの技術メモ。確認済みの手順と，開発中の記録。';
 ---
 
 <BaseLayout description={description}>

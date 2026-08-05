@@ -7,7 +7,7 @@ import { isVisible, newestFirst } from '../../lib/content';
 const entries = (await getCollection('devlog')).filter(isVisible).sort(newestFirst);
 ---
 
-<BaseLayout title="Devlog" description="開発と研究の途中経過、失敗、判断の変化を残す作業記録です。">
+<BaseLayout title="Devlog" description="開発と研究の途中経過，失敗，判断の変化を残す作業記録です。">
   <header class="page-header">
     <p class="eyebrow">DEVLOG / {entries.length}</p>
     <h1>Devlog</h1>
