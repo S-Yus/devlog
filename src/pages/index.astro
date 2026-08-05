@@ -27,7 +27,7 @@ const description = 'Yuseiの技術メモ。確認済みの手順と，開発中
   <div class="home-grid">
     <section aria-labelledby="latest-guides">
       <div class="section-heading">
-        <h2 id="latest-guides">Guides / 最新</h2>
+        <h2 id="latest-guides">Guides / Latest</h2>
         <a href="/guides/">一覧 →</a>
       </div>
       <PostList posts={guides.map((entry) => ({ ...entry.data, href: `/guides/${entry.id}/`, type: 'Guide', draft: entry.data.draft }))} />
@@ -35,7 +35,7 @@ const description = 'Yuseiの技術メモ。確認済みの手順と，開発中
 
     <section aria-labelledby="latest-devlog">
       <div class="section-heading">
-        <h2 id="latest-devlog">Devlog / 最新</h2>
+        <h2 id="latest-devlog">Devlog / Latest</h2>
         <a href="/devlog/">一覧 →</a>
       </div>
       <PostList posts={devlog.map((entry) => ({ ...entry.data, href: `/devlog/${entry.id}/`, type: 'Devlog', draft: entry.data.draft }))} />
