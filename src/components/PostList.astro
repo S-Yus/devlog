@@ -1,0 +1,37 @@
+---
+import { formatDate } from '../lib/content';
+
+interface Post {
+  title: string;
+  description: string;
+  publishedAt: Date;
+  href: string;
+  type?: 'Guide' | 'Devlog';
+  draft?: boolean;
+}
+
+interface Props {
+  posts: Post[];
+  emptyMessage?: string;
+}
+
+const { posts, emptyMessage = '公開中の記事はありません。' } = Astro.props;
+---
+
+{posts.length === 0 ? (
+  <p class="empty-state">{emptyMessage}</p>
+) : (
+  <ol class="post-list">
+    {posts.map((post) => (
+      <li>
+        <div class="post-meta">
+          {post.type && <span>{post.type}</span>}
+          <time datetime={post.publishedAt.toISOString()}>{formatDate(post.publishedAt)}</time>
+          {post.draft && <span class="draft-label">下書き</span>}
+        </div>
+        <h2><a href={post.href}>{post.title}</a></h2>
+        <p>{post.description}</p>
+      </li>
+    ))}
+  </ol>
+)}

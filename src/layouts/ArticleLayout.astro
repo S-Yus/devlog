@@ -1,0 +1,85 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import { formatDate } from '../lib/content';
+import '../styles/article.css';
+
+type Props =
+  | { entry: CollectionEntry<'guides'>; kind: 'Guide' }
+  | { entry: CollectionEntry<'devlog'>; kind: 'Devlog' };
+
+const { entry, kind } = Astro.props;
+const data = entry.data;
+const isGuide = kind === 'Guide';
+const updatedAt = 'updatedAt' in data ? data.updatedAt : undefined;
+const canonicalPath = `/${isGuide ? 'guides' : 'devlog'}/${entry.id}/`;
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: data.title,
+  description: data.description,
+  datePublished: data.publishedAt.toISOString(),
+  dateModified: (updatedAt ?? data.publishedAt).toISOString(),
+  author: { '@type': 'Person', name: 'Yusei' },
+  publisher: { '@type': 'Person', name: 'Yusei' },
+  mainEntityOfPage: new URL(canonicalPath, Astro.site ?? Astro.url.origin).href,
+  inLanguage: 'ja',
+};
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  canonicalPath={canonicalPath}
+  type="article"
+  publishedAt={data.publishedAt}
+  updatedAt={updatedAt}
+  structuredData={structuredData}
+>
+  <article class="article" data-pagefind-body>
+    <header class="article-header">
+      <p class="eyebrow" data-pagefind-meta="type" data-pagefind-filter="type">{kind}</p>
+      <h1 data-pagefind-meta="title">{data.title}</h1>
+      <p class="article-description" data-pagefind-meta="description">{data.description}</p>
+      <dl class="article-facts">
+        <div>
+          <dt>公開</dt>
+          <dd><time datetime={data.publishedAt.toISOString()}>{formatDate(data.publishedAt)}</time></dd>
+        </div>
+        {updatedAt && (
+          <div>
+            <dt>更新</dt>
+            <dd><time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time></dd>
+          </div>
+        )}
+        <div>
+          <dt>状態</dt>
+          <dd>{data.status}</dd>
+        </div>
+        {isGuide && 'difficulty' in data && (
+          <div>
+            <dt>難易度</dt>
+            <dd>{data.difficulty}</dd>
+          </div>
+        )}
+        {isGuide && 'estimatedMinutes' in data && (
+          <div>
+            <dt>目安</dt>
+            <dd>{data.estimatedMinutes}分</dd>
+          </div>
+        )}
+      </dl>
+      <ul class="tag-list" aria-label="タグ">
+        {data.tags.map((tag) => <li>{tag}</li>)}
+      </ul>
+    </header>
+    {!isGuide && (
+      <aside class="devlog-notice" aria-label="Devlogについて">
+        この記事は開発途中の記録です。内容は未検証であり、後から変更される場合があります。
+      </aside>
+    )}
+    <div class="article-body">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

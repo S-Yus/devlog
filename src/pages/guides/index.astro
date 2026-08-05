@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import PostList from '../../components/PostList.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { isVisible, newestFirst } from '../../lib/content';
+
+const entries = (await getCollection('guides')).filter(isVisible).sort(newestFirst);
+---
+
+<BaseLayout title="Guides" description="再現可能な手順と検証結果をまとめた技術ガイドです。">
+  <header class="page-header">
+    <p class="eyebrow">Verified technical notes</p>
+    <h1>Guides</h1>
+    <p>環境構築、実行手順、トラブルシューティングを、後から再現できる形でまとめます。</p>
+  </header>
+  <PostList posts={entries.map((entry) => ({ ...entry.data, href: `/guides/${entry.id}/`, draft: entry.data.draft }))} />
+</BaseLayout>

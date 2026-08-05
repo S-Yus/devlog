@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Search" description="Yusei.devの公開済みGuidesとDevlogを検索します。">
+  <header class="page-header">
+    <p class="eyebrow">Local site index</p>
+    <h1>Search</h1>
+    <p>公開済みの Guides と Devlog から、タイトル・説明・本文を検索します。</p>
+  </header>
+
+  <section class="search-panel" aria-labelledby="search-form-title">
+    <h2 id="search-form-title" class="visually-hidden">記事検索フォーム</h2>
+    <form id="search-form" role="search">
+      <label for="search-input">検索語</label>
+      <div class="search-controls">
+        <input id="search-input" name="q" type="search" autocomplete="off" placeholder="例: Astro" />
+        <button type="submit">検索</button>
+      </div>
+    </form>
+    <p id="search-status" class="search-status" role="status" aria-live="polite">検索語を入力してください。</p>
+    <ol id="search-results" class="search-results"></ol>
+  </section>
+
+  <script is:inline>
+    const form = document.querySelector('#search-form');
+    const input = document.querySelector('#search-input');
+    const status = document.querySelector('#search-status');
+    const resultsList = document.querySelector('#search-results');
+
+    const setStatus = (message) => {
+      if (status) status.textContent = message;
+    };
+
+    const renderResults = (items) => {
+      if (!resultsList) return;
+      resultsList.replaceChildren();
+      for (const item of items) {
+        const listItem = document.createElement('li');
+        const type = document.createElement('p');
+        const heading = document.createElement('h2');
+        const link = document.createElement('a');
+        const summary = document.createElement('p');
+        const path = document.createElement('code');
+
+        type.className = 'search-result-type';
+        type.textContent = item.meta.type || 'Article';
+        link.href = item.url;
+        link.textContent = item.meta.title || item.url;
+        heading.append(link);
+        summary.textContent = item.meta.description || item.excerpt.replace(/<[^>]*>/g, '');
+        path.textContent = new URL(item.url, window.location.origin).pathname;
+        listItem.append(type, heading, summary, path);
+        resultsList.append(listItem);
+      }
+    };
+
+    const search = async (query) => {
+      const trimmed = query.trim();
+      const url = new URL(window.location.href);
+      if (trimmed) url.searchParams.set('q', trimmed);
+      else url.searchParams.delete('q');
+      window.history.replaceState({}, '', url);
+
+      if (!trimmed) {
+        renderResults([]);
+        setStatus('検索語を入力してください。');
+        return;
+      }
+
+      setStatus('検索中…');
+      try {
+        const pagefind = await import('/pagefind/pagefind.js');
+        await pagefind.init();
+        const searchResult = await pagefind.search(trimmed);
+        const selected = searchResult.results.slice(0, 30);
+        const items = await Promise.all(selected.map((result) => result.data()));
+        renderResults(items);
+        setStatus(`${searchResult.results.length}件見つかりました${searchResult.results.length > 30 ? '（上位30件を表示）' : ''}。`);
+      } catch (error) {
+        console.error(error);
+        renderResults([]);
+        setStatus('検索インデックスを読み込めませんでした。npm run build後のプレビューで確認してください。');
+      }
+    };
+
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (input instanceof HTMLInputElement) search(input.value);
+    });
+
+    const initialQuery = new URL(window.location.href).searchParams.get('q') || '';
+    if (input instanceof HTMLInputElement) {
+      input.value = initialQuery;
+      if (initialQuery) search(initialQuery);
+    }
+  </script>
+</BaseLayout>

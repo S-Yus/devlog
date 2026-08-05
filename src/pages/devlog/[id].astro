@@ -1,0 +1,17 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { isVisible } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const entries = (await getCollection('devlog')).filter(isVisible);
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ArticleLayout entry={entry} kind="Devlog">
+  <Content />
+</ArticleLayout>
