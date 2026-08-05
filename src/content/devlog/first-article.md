@@ -33,18 +33,13 @@ CursorやClaudeに指示を出してコードを生成し、エラーが出た�
 - **公式ドキュメントを読む**  
   AIに聞く前に、自力で泥臭く試行錯誤する。
 
+
 それでは聴いてください。Geminiで「バイブコーディング」。
 
 <audio controls preload="metadata">
   <source src="/audio/20260805/vibecoding.mp3" type="audio/mpeg">
   音声を再生できません。
 </audio>
-
-<p>
-  <a href="/audio/20260805/vibecoding.mp3" download>
-    音声ファイルをダウンロード
-  </a>
-</p>
 
 ---
 ### 歌詞
