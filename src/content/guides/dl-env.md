@@ -15,7 +15,7 @@ environment:
   - "WSL2 Ubuntu"
 difficulty: beginner
 estimatedMinutes: 10
-draft: true
+draft: false
 ---
 
 ### 1. 仮想環境を作って有効化
