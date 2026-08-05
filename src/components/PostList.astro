@@ -13,25 +13,128 @@ interface Post {
 interface Props {
   posts: Post[];
   emptyMessage?: string;
+  sortable?: boolean;
 }
 
-const { posts, emptyMessage = '公開中の記事はありません。' } = Astro.props;
+const { posts, emptyMessage = '公開中の記事はありません。', sortable = false } = Astro.props;
 ---
 
 {posts.length === 0 ? (
   <p class="empty-state">{emptyMessage}</p>
 ) : (
-  <ol class="post-list">
-    {posts.map((post) => (
-      <li>
-        <div class="post-meta">
-          {post.type && <span>{post.type}</span>}
-          <time datetime={post.publishedAt.toISOString()}>{formatDate(post.publishedAt)}</time>
-          {post.draft && <span class="draft-label">下書き</span>}
-        </div>
-        <h2><a href={post.href}>{post.title}</a></h2>
-        <p>{post.description}</p>
-      </li>
-    ))}
-  </ol>
+  <div class="post-index" data-post-index>
+    {sortable && (
+      <div class="sort-controls" role="group" aria-label="記事の並び順">
+        <span>並び順</span>
+        <button type="button" data-sort="new" aria-pressed="true">新しい順</button>
+        <button type="button" data-sort="old" aria-pressed="false">古い順</button>
+        <button type="button" data-sort="rating" aria-pressed="false">高評価順</button>
+      </div>
+    )}
+    <p class="visually-hidden" role="status" aria-live="polite" data-sort-status></p>
+    <ol class="post-list" data-post-list>
+      {posts.map((post) => (
+        <li data-path={post.href} data-published={post.publishedAt.valueOf()} data-likes="0">
+          <div class="post-meta">
+            {post.type && <span>{post.type}</span>}
+            <time datetime={post.publishedAt.toISOString()}>{formatDate(post.publishedAt)}</time>
+            <span class="post-like-count" aria-label="いいね数を取得中">
+              <span aria-hidden="true">+</span>
+              <span data-list-like-count>…</span>
+            </span>
+            {post.draft && <span class="draft-label">下書き</span>}
+          </div>
+          <h2><a href={post.href}>{post.title}</a></h2>
+          <p>{post.description}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
 )}
+
+<script>
+  type SortOrder = 'new' | 'old' | 'rating';
+
+  interface LikesResponse {
+    likes?: Record<string, number>;
+  }
+
+  const indexes = [...document.querySelectorAll<HTMLElement>('[data-post-index]')];
+
+  const sortIndex = (index: HTMLElement, order: SortOrder) => {
+    const list = index.querySelector<HTMLOListElement>('[data-post-list]');
+    const status = index.querySelector<HTMLElement>('[data-sort-status]');
+    if (!list) return;
+
+    const items = [...list.querySelectorAll<HTMLLIElement>(':scope > li')];
+    items.sort((a, b) => {
+      const dateA = Number(a.dataset.published ?? 0);
+      const dateB = Number(b.dataset.published ?? 0);
+      const likesA = Number(a.dataset.likes ?? 0);
+      const likesB = Number(b.dataset.likes ?? 0);
+
+      if (order === 'old') return dateA - dateB;
+      if (order === 'rating') return likesB - likesA || dateB - dateA;
+      return dateB - dateA;
+    });
+    list.append(...items);
+    index.dataset.sortOrder = order;
+
+    index.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.sort === order));
+    });
+    if (status) {
+      const labels: Record<SortOrder, string> = {
+        new: '新しい順',
+        old: '古い順',
+        rating: '高評価順',
+      };
+      status.textContent = `${labels[order]}に並べ替えました`;
+    }
+  };
+
+  for (const index of indexes) {
+    index.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const order = button.dataset.sort;
+        if (order === 'new' || order === 'old' || order === 'rating') sortIndex(index, order);
+      });
+    });
+  }
+
+  const loadLikeCounts = async () => {
+    const items = [...document.querySelectorAll<HTMLLIElement>('[data-post-index] [data-path]')];
+    const paths = [...new Set(items.map((item) => item.dataset.path).filter((path): path is string => Boolean(path)))];
+    const likes: Record<string, number> = {};
+
+    for (let offset = 0; offset < paths.length; offset += 50) {
+      const params = new URLSearchParams();
+      for (const path of paths.slice(offset, offset + 50)) params.append('path', path);
+      const response = await fetch(`/api/likes?${params}`);
+      if (!response.ok) throw new Error('Failed to load likes');
+      const data = (await response.json()) as LikesResponse;
+      Object.assign(likes, data.likes);
+    }
+
+    for (const item of items) {
+      const path = item.dataset.path;
+      const count = path ? likes[path] ?? 0 : 0;
+      item.dataset.likes = String(count);
+      const output = item.querySelector<HTMLElement>('[data-list-like-count]');
+      const container = output?.closest<HTMLElement>('.post-like-count');
+      if (output) output.textContent = String(count);
+      if (container) container.setAttribute('aria-label', `${count}件のいいね`);
+    }
+
+    for (const index of indexes) {
+      if (index.dataset.sortOrder === 'rating') sortIndex(index, 'rating');
+    }
+  };
+
+  loadLikeCounts().catch(() => {
+    document.querySelectorAll<HTMLElement>('[data-list-like-count]').forEach((output) => {
+      output.textContent = '—';
+      output.closest<HTMLElement>('.post-like-count')?.setAttribute('aria-label', 'いいね数を取得できません');
+    });
+  });
+</script>

@@ -1,6 +1,6 @@
 # Yusei.dev
 
-技術ツールの実行手順，トラブルシューティング，開発・研究の記録を公開する，静的な技術ブログ兼ポートフォリオサイトです。完成版の記事を **Guides**，検証途中の記録を **Devlog** として管理します。CMS，データベース，外部トラッキングは使用しません。
+技術ツールの実行手順，トラブルシューティング，開発・研究の記録を公開する，静的な技術ブログ兼ポートフォリオサイトです。完成版の記事を **Guides**，検証途中の記録を **Devlog** として管理します。記事はCMSを使わずMarkdownで管理し，いいね数だけをCloudflare D1へ保存します。外部トラッキングは使用しません。
 
 ## 使用技術
 
@@ -9,6 +9,7 @@
 - `@astrojs/sitemap` / `@astrojs/rss`
 - Pagefind
 - CSS
+- Cloudflare Pages Functions / D1
 - GitHub Actions
 - Cloudflare Pages
 
@@ -124,6 +125,25 @@ Cloudflare Dashboardの **Workers & Pages** から **Create application → Page
 | Environment variable | `NODE_VERSION=24` |
 
 フレームワークプリセットを選ぶ場合はAstroを選択します。GitHub Actionsからはデプロイせず，Cloudflare PagesのGit連携に任せます。
+
+### いいね機能用D1の設定
+
+いいね数はCloudflare D1へ保存します。初回だけ次の設定が必要です。
+
+1. Cloudflare Dashboardで **Storage & Databases → D1 SQL Database → Create database** を開く。
+2. データベース名を`yusei-dev-likes`として作成する。
+3. 作成したデータベースの **Console** を開く。
+4. `migrations/0001_create_article_likes.sql`の内容を貼り付けて実行する。
+5. **Workers & Pages → yusei-dev → Bindings → Add binding** を開く。
+6. 種別に **D1 database** を選ぶ。
+7. Variable nameを`DB`にする。
+8. D1 databaseに`yusei-dev-likes`を選び，保存する。
+9. Preview環境にも同じ`DB` bindingを設定する。
+10. **Deployments**から最新コミットを再デプロイする。
+
+APIは`/api/likes`で提供されます。記事ページでは同じブラウザから同じ記事への重複評価を防ぎ，一覧ページではD1の件数を使って新しい順，古い順，高評価順に並べ替えます。ログイン機能はなく，IPアドレスは保存しません。ブラウザの保存データを消した場合やAPIを直接呼び出した場合まで完全に防ぐ仕組みではありません。
+
+ローカルの`npm run dev`と`npm run preview`ではPages FunctionsとD1が起動しないため，いいねAPIの最終確認はCloudflareのPreview deploymentまたは本番環境で行います。
 
 ### `yusei.dev`のカスタムドメイン
 

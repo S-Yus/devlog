@@ -13,5 +13,5 @@ const entries = (await getCollection('devlog')).filter(isVisible).sort(newestFir
     <h1>Devlog</h1>
     <p>作業中のメモ。内容は変わります。</p>
   </header>
-  <PostList posts={entries.map((entry) => ({ ...entry.data, href: `/devlog/${entry.id}/`, draft: entry.data.draft }))} />
+  <PostList sortable posts={entries.map((entry) => ({ ...entry.data, href: `/devlog/${entry.id}/`, draft: entry.data.draft }))} />
 </BaseLayout>

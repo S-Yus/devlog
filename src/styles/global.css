@@ -332,6 +332,51 @@ main {
   color: #852f00;
 }
 
+.post-like-count {
+  display: inline-flex;
+  gap: 0.25rem;
+  color: var(--text);
+}
+
+.sort-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  margin-bottom: 1rem;
+  border: 1px solid var(--strong-line);
+}
+
+.sort-controls > span,
+.sort-controls button {
+  min-height: 2.4rem;
+  padding: 0.4rem 0.7rem;
+  border: 0;
+  border-right: 1px solid var(--strong-line);
+  border-radius: 0;
+  font: inherit;
+}
+
+.sort-controls > span {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.sort-controls button {
+  color: var(--text);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.sort-controls button:hover,
+.sort-controls button[aria-pressed='true'] {
+  color: #fff;
+  background: #000;
+}
+
 .split-section,
 .project-callout {
   display: grid;
@@ -598,6 +643,11 @@ main {
 
   .definition-table dd {
     padding-top: 0;
+  }
+
+  .sort-controls > span {
+    width: 100%;
+    border-bottom: 1px solid var(--strong-line);
   }
 }
 

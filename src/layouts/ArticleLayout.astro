@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import CodeCopy from '../components/CodeCopy.astro';
+import LikeButton from '../components/LikeButton.astro';
 import BaseLayout from './BaseLayout.astro';
 import { formatDate } from '../lib/content';
 import '../styles/article.css';
@@ -82,6 +83,9 @@ const structuredData = {
     <div class="article-body">
       <slot />
     </div>
+    <footer class="article-actions">
+      <LikeButton path={canonicalPath} />
+    </footer>
   </article>
   <CodeCopy />
 </BaseLayout>

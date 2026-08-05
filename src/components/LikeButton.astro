@@ -1,0 +1,110 @@
+---
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+---
+
+<div class="article-like" data-like-widget data-path={path} data-pagefind-ignore>
+  <button class="like-button" type="button" aria-pressed="false">
+    <span aria-hidden="true">+</span>
+    <span data-like-label>いいね</span>
+  </button>
+  <span class="like-total" aria-label="いいね数"><strong data-like-total>…</strong> 件</span>
+  <span class="like-status" role="status" aria-live="polite" data-like-status></span>
+</div>
+
+<script>
+  interface LikeResponse {
+    count?: number;
+    accepted?: boolean;
+  }
+
+  interface LikesResponse {
+    likes?: Record<string, number>;
+  }
+
+  const voterStorageKey = 'yusei.dev:voter-id';
+
+  const getStorage = (key: string) => {
+    try {
+      return window.localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  };
+
+  const setStorage = (key: string, value: string) => {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch {
+      // The server still enforces one vote per generated browser ID.
+    }
+  };
+
+  const getVoterId = () => {
+    const existing = getStorage(voterStorageKey);
+    if (existing) return existing;
+
+    const voterId = crypto.randomUUID();
+    setStorage(voterStorageKey, voterId);
+    return voterId;
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-like-widget]').forEach((widget) => {
+    const path = widget.dataset.path;
+    const button = widget.querySelector<HTMLButtonElement>('.like-button');
+    const label = widget.querySelector<HTMLElement>('[data-like-label]');
+    const total = widget.querySelector<HTMLElement>('[data-like-total]');
+    const status = widget.querySelector<HTMLElement>('[data-like-status]');
+    if (!path || !button || !label || !total || !status) return;
+
+    const likedKey = `yusei.dev:liked:${path}`;
+    const markLiked = () => {
+      button.disabled = true;
+      button.setAttribute('aria-pressed', 'true');
+      label.textContent = 'いいね済み';
+    };
+
+    if (getStorage(likedKey) === 'true') markLiked();
+
+    const params = new URLSearchParams({ path });
+    fetch(`/api/likes?${params}`)
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Failed to load likes');
+        return (await response.json()) as LikesResponse;
+      })
+      .then((data) => {
+        total.textContent = String(data.likes?.[path] ?? 0);
+      })
+      .catch(() => {
+        total.textContent = '—';
+        status.textContent = 'いいね数を取得できません';
+        button.disabled = true;
+      });
+
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      status.textContent = '送信中';
+
+      try {
+        const response = await fetch('/api/likes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path, voterId: getVoterId() }),
+        });
+        if (!response.ok) throw new Error('Failed to save like');
+
+        const data = (await response.json()) as LikeResponse;
+        total.textContent = String(data.count ?? 0);
+        setStorage(likedKey, 'true');
+        markLiked();
+        status.textContent = data.accepted ? 'いいねしました' : 'すでにいいね済みです';
+      } catch {
+        button.disabled = false;
+        status.textContent = '送信できませんでした';
+      }
+    });
+  });
+</script>
