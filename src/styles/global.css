@@ -429,6 +429,10 @@ main {
   font-family: system-ui, sans-serif;
 }
 
+.content-standard {
+  margin-bottom: 1.5rem;
+}
+
 .project-placeholder {
   padding: 1rem 0;
   border-top: 2px solid var(--strong-line);

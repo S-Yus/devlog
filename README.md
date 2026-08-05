@@ -45,6 +45,8 @@ npm run dev
 
 ## 記事を作成する
 
+記事種別の判断、公開条件、Frontmatterの使い分けは[`CONTENT_GUIDE.md`](./CONTENT_GUIDE.md)にまとめています。
+
 Guideは次のコマンドで作成します。
 
 ```bash
