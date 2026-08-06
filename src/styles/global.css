@@ -301,8 +301,8 @@ main {
 
 .post-list > li {
   display: grid;
-  grid-template-columns: minmax(7rem, 0.28fr) minmax(0, 1fr);
-  gap: 0.15rem 1rem;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.15rem 1.5rem;
   align-items: baseline;
   padding: 0.65rem 0;
   border-top: 1px solid var(--line);
@@ -324,8 +324,10 @@ main {
 
 .post-meta {
   display: flex;
+  flex-wrap: nowrap;
   gap: 0.6rem;
   margin: 0;
+  white-space: nowrap;
 }
 
 .draft-label {
