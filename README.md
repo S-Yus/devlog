@@ -126,6 +126,8 @@ Cloudflare Dashboardの **Workers & Pages** から **Create application → Page
 
 フレームワークプリセットを選ぶ場合はAstroを選択します。GitHub Actionsからはデプロイせず，Cloudflare PagesのGit連携に任せます。
 
+同じリポジトリから同名のWorkersアプリケーションを作成しないでください。このサイトはPagesプロジェクトだけでビルド・公開します。
+
 ### いいね機能用D1の設定
 
 いいね数はCloudflare D1へ保存します。D1 bindingは`wrangler.jsonc`で管理し，CloudflareのGitデプロイへ反映します。初回だけ次の設定が必要です。
