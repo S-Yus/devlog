@@ -4,7 +4,7 @@ description: "WSL: Ubuntuで深層学習用の仮想環境を最低限作成す�
 publishedAt: 2026-08-05
 updatedAt: 2026-08-05
 status: verified
-category: development
+category: setup
 tags:
   - Deep Learning
   - WSL

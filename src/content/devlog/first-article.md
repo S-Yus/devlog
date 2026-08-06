@@ -2,7 +2,7 @@
 title: "開設"
 description: "ブログ開設の経緯と抱負"
 publishedAt: 2026-08-05
-project: example-project
+project: ex
 status: completed
 tags:
   - Development
@@ -71,3 +71,9 @@ AIに聞く前に，自力で試す
 泥臭い夏，始まりの合図
 失った時間を取り戻すように
 ```
+
+## 関連リンク
+
+- [Guide一覧](/guides/)
+- [Devlog一覧](/devlog/)
+- [Projects](/projects/)
