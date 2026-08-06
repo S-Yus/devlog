@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { GUIDE_CATEGORY_VALUES } from './lib/guide-categories';
 
 const guides = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/guides' }),
@@ -10,7 +11,7 @@ const guides = defineCollection({
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date(),
     status: z.enum(['draft', 'verified', 'needs-update', 'deprecated']),
-    category: z.string().min(1),
+    category: z.enum(GUIDE_CATEGORY_VALUES),
     tags: z.array(z.string().min(1)),
     environment: z.array(z.string().min(1)),
     difficulty: z.enum(['beginner', 'intermediate', 'advanced']),

@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import PostList from '../../components/PostList.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { isVisible, newestFirst } from '../../lib/content';
+import { GUIDE_CATEGORY_OPTIONS } from '../../lib/guide-categories';
 
 const entries = (await getCollection('guides')).filter(isVisible).sort(newestFirst);
 ---
@@ -13,5 +14,9 @@ const entries = (await getCollection('guides')).filter(isVisible).sort(newestFir
     <h1>Guides</h1>
     <p>設定，導入，トラブルシューティング。第三者が再現できる状態まで確認したもの。</p>
   </header>
-  <PostList sortable posts={entries.map((entry) => ({ ...entry.data, href: `/guides/${entry.id}/`, draft: entry.data.draft }))} />
+  <PostList
+    sortable
+    categoryOptions={GUIDE_CATEGORY_OPTIONS}
+    posts={entries.map((entry) => ({ ...entry.data, href: `/guides/${entry.id}/`, draft: entry.data.draft }))}
+  />
 </BaseLayout>

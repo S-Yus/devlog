@@ -340,16 +340,24 @@ main {
   color: var(--text);
 }
 
-.sort-controls {
+.index-controls {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.sort-controls,
+.filter-controls {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  margin-bottom: 1rem;
   border: 1px solid var(--strong-line);
 }
 
 .sort-controls > span,
-.sort-controls button {
+.sort-controls button,
+.filter-controls > span,
+.filter-controls button {
   min-height: 2.4rem;
   padding: 0.4rem 0.7rem;
   border: 0;
@@ -358,7 +366,8 @@ main {
   font: inherit;
 }
 
-.sort-controls > span {
+.sort-controls > span,
+.filter-controls > span {
   display: inline-flex;
   align-items: center;
   color: var(--muted);
@@ -367,16 +376,24 @@ main {
   text-transform: uppercase;
 }
 
-.sort-controls button {
+.sort-controls button,
+.filter-controls button {
   color: var(--text);
   background: var(--surface);
   cursor: pointer;
 }
 
 .sort-controls button:hover,
-.sort-controls button[aria-pressed='true'] {
+.sort-controls button[aria-pressed='true'],
+.filter-controls button:hover,
+.filter-controls button[aria-pressed='true'] {
   color: #fff;
   background: #000;
+}
+
+.filter-empty {
+  margin: 1rem 0;
+  color: var(--muted);
 }
 
 .split-section,
@@ -647,7 +664,8 @@ main {
     padding-top: 0;
   }
 
-  .sort-controls > span {
+  .sort-controls > span,
+  .filter-controls > span {
     width: 100%;
     border-bottom: 1px solid var(--strong-line);
   }

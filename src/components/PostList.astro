@@ -7,34 +7,66 @@ interface Post {
   publishedAt: Date;
   href: string;
   type?: 'Guide' | 'Devlog';
+  category?: string;
   draft?: boolean;
+}
+
+interface CategoryOption {
+  value: string;
+  label: string;
 }
 
 interface Props {
   posts: Post[];
   emptyMessage?: string;
   sortable?: boolean;
+  categoryOptions?: readonly CategoryOption[];
 }
 
-const { posts, emptyMessage = '公開中の記事はありません。', sortable = false } = Astro.props;
+const {
+  posts,
+  emptyMessage = '公開中の記事はありません。',
+  sortable = false,
+  categoryOptions = [],
+} = Astro.props;
 ---
 
 {posts.length === 0 ? (
   <p class="empty-state">{emptyMessage}</p>
 ) : (
   <div class="post-index" data-post-index>
-    {sortable && (
-      <div class="sort-controls" role="group" aria-label="記事の並び順">
-        <span>並び順</span>
-        <button type="button" data-sort="new" aria-pressed="true">新しい順</button>
-        <button type="button" data-sort="old" aria-pressed="false">古い順</button>
-        <button type="button" data-sort="rating" aria-pressed="false">高評価順</button>
+    {(categoryOptions.length > 0 || sortable) && (
+      <div class="index-controls">
+        {categoryOptions.length > 0 && (
+          <div class="filter-controls" role="group" aria-label="Guideカテゴリ">
+            <span>カテゴリ</span>
+            <button type="button" data-category-filter="all" aria-pressed="true">すべて</button>
+            {categoryOptions.map((category) => (
+              <button type="button" data-category-filter={category.value} aria-pressed="false">
+                {category.label}
+              </button>
+            ))}
+          </div>
+        )}
+        {sortable && (
+          <div class="sort-controls" role="group" aria-label="記事の並び順">
+            <span>並び順</span>
+            <button type="button" data-sort="new" aria-pressed="true">新しい順</button>
+            <button type="button" data-sort="old" aria-pressed="false">古い順</button>
+            <button type="button" data-sort="rating" aria-pressed="false">高評価順</button>
+          </div>
+        )}
       </div>
     )}
     <p class="visually-hidden" role="status" aria-live="polite" data-sort-status></p>
     <ol class="post-list" data-post-list>
       {posts.map((post) => (
-        <li data-path={post.href} data-published={post.publishedAt.valueOf()} data-likes="0">
+        <li
+          data-path={post.href}
+          data-published={post.publishedAt.valueOf()}
+          data-likes="0"
+          data-category={post.category}
+        >
           <div class="post-meta">
             {post.type && <span>{post.type}</span>}
             <time datetime={post.publishedAt.toISOString()}>{formatDate(post.publishedAt)}</time>
@@ -49,6 +81,7 @@ const { posts, emptyMessage = '公開中の記事はありません。', sortabl
         </li>
       ))}
     </ol>
+    <p class="filter-empty" data-filter-empty hidden>該当するGuideはありません。</p>
   </div>
 )}
 
@@ -61,9 +94,40 @@ const { posts, emptyMessage = '公開中の記事はありません。', sortabl
 
   const indexes = [...document.querySelectorAll<HTMLElement>('[data-post-index]')];
 
-  const sortIndex = (index: HTMLElement, order: SortOrder) => {
+  const updateIndexView = (index: HTMLElement) => {
     const list = index.querySelector<HTMLOListElement>('[data-post-list]');
     const status = index.querySelector<HTMLElement>('[data-sort-status]');
+    const empty = index.querySelector<HTMLElement>('[data-filter-empty]');
+    if (!list) return;
+
+    const category = index.dataset.categoryFilter ?? 'all';
+    const order = (index.dataset.sortOrder ?? 'new') as SortOrder;
+    const items = [...list.querySelectorAll<HTMLLIElement>(':scope > li')];
+    let visibleCount = 0;
+
+    for (const item of items) {
+      const visible = category === 'all' || item.dataset.category === category;
+      item.hidden = !visible;
+      if (visible) visibleCount += 1;
+    }
+
+    if (empty) empty.hidden = visibleCount !== 0;
+    if (status) {
+      const selectedCategory = index.querySelector<HTMLButtonElement>(
+        `[data-category-filter="${category}"]`,
+      );
+      const orderLabels: Record<SortOrder, string> = {
+        new: '新しい順',
+        old: '古い順',
+        rating: '高評価順',
+      };
+      const categoryLabel = selectedCategory?.textContent?.trim() ?? 'すべて';
+      status.textContent = `${categoryLabel}、${orderLabels[order]}で${visibleCount}件を表示しています`;
+    }
+  };
+
+  const sortIndex = (index: HTMLElement, order: SortOrder) => {
+    const list = index.querySelector<HTMLOListElement>('[data-post-list]');
     if (!list) return;
 
     const items = [...list.querySelectorAll<HTMLLIElement>(':scope > li')];
@@ -83,23 +147,34 @@ const { posts, emptyMessage = '公開中の記事はありません。', sortabl
     index.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach((button) => {
       button.setAttribute('aria-pressed', String(button.dataset.sort === order));
     });
-    if (status) {
-      const labels: Record<SortOrder, string> = {
-        new: '新しい順',
-        old: '古い順',
-        rating: '高評価順',
-      };
-      status.textContent = `${labels[order]}に並べ替えました`;
-    }
+    updateIndexView(index);
   };
 
   for (const index of indexes) {
+    index.dataset.categoryFilter = 'all';
+    index.dataset.sortOrder = 'new';
+
+    index.querySelectorAll<HTMLButtonElement>('[data-category-filter]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const category = button.dataset.categoryFilter;
+        if (!category) return;
+
+        index.dataset.categoryFilter = category;
+        index.querySelectorAll<HTMLButtonElement>('[data-category-filter]').forEach((candidate) => {
+          candidate.setAttribute('aria-pressed', String(candidate === button));
+        });
+        updateIndexView(index);
+      });
+    });
+
     index.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach((button) => {
       button.addEventListener('click', () => {
         const order = button.dataset.sort;
         if (order === 'new' || order === 'old' || order === 'rating') sortIndex(index, order);
       });
     });
+
+    updateIndexView(index);
   }
 
   const loadLikeCounts = async () => {
