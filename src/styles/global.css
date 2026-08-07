@@ -308,6 +308,11 @@ main {
   border-top: 1px solid var(--line);
 }
 
+.post-list > li[hidden],
+.filter-empty[hidden] {
+  display: none;
+}
+
 .post-list h2 {
   margin: 0;
   font-size: 1rem;
