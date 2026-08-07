@@ -65,6 +65,27 @@ status: deprecated
 
 複数に当てはまる場合は，記事の主目的を1つ選びます。
 
+## 更新履歴
+
+GuideとDevlogは，Frontmatterの`history`で公開・更新履歴を管理します。本文に`更新履歴`見出しを手書きする必要はありません。
+
+```yaml
+history:
+  - at: "2026-08-08T12:00:00+09:00"
+    summary: "初版公開"
+  - at: "2026-08-09T18:30:00+09:00"
+    summary: "検証環境と実行結果を追加"
+```
+
+- 古い履歴から順に並べる
+- `at`は`YYYY-MM-DDTHH:mm:ss+09:00`形式で記録する
+- `summary`には読者が分かる変更内容を書く
+- 公開時に最初の`初版公開`を追加してから`draft: false`にする
+- 記事を更新して公開するたびに1件追加する
+- 下書き中は`history: []`でよい
+
+記事末尾の表示，ヘッダーの公開・更新日時，検索エンジン向けの公開・更新日時はこの履歴から自動生成されます。
+
 ## テンプレートの関連リンク
 
 GuideとDevlogの新規テンプレートは，本文に小見出しを自動生成せず，末尾の`関連リンク`だけを用意します。記事に必要な見出しは内容に合わせて追加します。
@@ -92,6 +113,9 @@ kind: journal
 publishedAt: 2026-08-07
 tags:
   - Daily
+history:
+  - at: "2026-08-07T22:00:00+09:00"
+    summary: "初版公開"
 draft: false
 ```
 
@@ -113,6 +137,9 @@ npm run new:journal
 kind: worklog
 project: bulletin-board
 status: ongoing
+history:
+  - at: "2026-08-07T22:00:00+09:00"
+    summary: "初版公開"
 draft: false
 ```
 

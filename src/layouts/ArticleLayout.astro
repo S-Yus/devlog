@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import CodeCopy from '../components/CodeCopy.astro';
 import LikeButton from '../components/LikeButton.astro';
 import BaseLayout from './BaseLayout.astro';
-import { formatDate } from '../lib/content';
+import { formatDateTime } from '../lib/content';
 import '../styles/article.css';
 
 interface ArticleLink {
@@ -23,15 +23,16 @@ const { entry, kind, previous, next } = Astro.props;
 const data = entry.data;
 const isGuide = kind === 'Guide';
 const isJournal = !isGuide && 'kind' in data && data.kind === 'journal';
-const updatedAt = 'updatedAt' in data ? data.updatedAt : undefined;
+const publishedAt = data.history[0]?.at ?? data.publishedAt;
+const updatedAt = data.history.length > 1 ? data.history.at(-1)?.at : undefined;
 const canonicalPath = `/${isGuide ? 'guides' : 'devlog'}/${entry.id}/`;
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': isJournal ? 'BlogPosting' : 'TechArticle',
   headline: data.title,
   description: data.description,
-  datePublished: data.publishedAt.toISOString(),
-  dateModified: (updatedAt ?? data.publishedAt).toISOString(),
+  datePublished: publishedAt.toISOString(),
+  dateModified: (updatedAt ?? publishedAt).toISOString(),
   author: { '@type': 'Person', name: 'Yusei' },
   publisher: { '@type': 'Person', name: 'Yusei' },
   mainEntityOfPage: new URL(canonicalPath, Astro.site ?? Astro.url.origin).href,
@@ -44,7 +45,7 @@ const structuredData = {
   description={data.description}
   canonicalPath={canonicalPath}
   type="article"
-  publishedAt={data.publishedAt}
+  publishedAt={publishedAt}
   updatedAt={updatedAt}
   structuredData={structuredData}
 >
@@ -58,12 +59,12 @@ const structuredData = {
       <dl class="article-facts">
         <div>
           <dt>公開</dt>
-          <dd><time datetime={data.publishedAt.toISOString()}>{formatDate(data.publishedAt)}</time></dd>
+          <dd><time datetime={publishedAt.toISOString()}>{formatDateTime(publishedAt)}</time></dd>
         </div>
         {updatedAt && (
           <div>
             <dt>更新</dt>
-            <dd><time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time></dd>
+            <dd><time datetime={updatedAt.toISOString()}>{formatDateTime(updatedAt)}</time></dd>
           </div>
         )}
         {!isGuide && 'kind' in data && (
@@ -99,6 +100,20 @@ const structuredData = {
     <div class="article-body">
       <slot />
     </div>
+    {data.history.length > 0 && (
+      <section class="article-history" aria-labelledby="article-history-heading">
+        <h2 id="article-history-heading">更新履歴</h2>
+        <ol>
+          {data.history.map((item, index) => (
+            <li>
+              <span>{index === 0 ? '公開' : '更新'}</span>
+              <time datetime={item.at.toISOString()}>{formatDateTime(item.at)}</time>
+              <p>{item.summary}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
     {(previous || next) && (
       <nav class="article-pagination" aria-label="前後の記事">
         {previous && (

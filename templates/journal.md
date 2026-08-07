@@ -5,6 +5,7 @@ publishedAt: {{date}}
 kind: journal
 tags:
   - Daily
+history: []
 draft: true
 ---
 

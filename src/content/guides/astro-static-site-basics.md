@@ -2,7 +2,6 @@
 title: "Astroで軽量な静的サイトを構築する(テスト投稿)"
 description: "Astroの静的出力を確認し，ローカルで本番ビルドを検証する最小手順"
 publishedAt: 2026-08-05
-updatedAt: 2026-08-05
 status: verified
 category: development
 tags:
@@ -14,6 +13,13 @@ environment:
   - "WSL2 Ubuntu"
   - "Node.js 24"
 estimatedMinutes: 10
+history:
+  - at: "2026-08-05T20:05:29+09:00"
+    summary: "初版公開"
+  - at: "2026-08-05T22:49:36+09:00"
+    summary: "タイトルと説明の表記を調整"
+  - at: "2026-08-08T00:11:04+09:00"
+    summary: "記事情報から難易度を削除"
 draft: false
 ---
 
@@ -88,7 +94,3 @@ Node.js 24へ切り替え，`node -v`で有効なバージョンを確認して�
 
 - [Astro Documentation](https://docs.astro.build/)
 - [Pagefind Documentation](https://pagefind.app/)
-
-## 更新履歴
-
-- 2026-08-05: 初版公開

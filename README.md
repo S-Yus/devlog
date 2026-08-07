@@ -84,7 +84,17 @@ npm run new:journal -- 2026-08-07-cloudflare-settings
 draft: false
 ```
 
-Guideでは手順を実際に再検証したうえで，必要に応じて`status: verified`と`updatedAt`も更新します。Frontmatterの必須項目や列挙値に誤りがあると型検査またはビルドが失敗します。
+Guideでは手順を実際に再検証したうえで，必要に応じて`status: verified`へ変更します。公開時は`history`に初版公開の日時と内容を追加し，以後の更新も古い順に追記します。Frontmatterの必須項目や列挙値に誤りがあると型検査またはビルドが失敗します。
+
+```yaml
+history:
+  - at: "2026-08-08T12:00:00+09:00"
+    summary: "初版公開"
+  - at: "2026-08-09T18:30:00+09:00"
+    summary: "動作確認手順を追加"
+```
+
+`draft: false`の記事には1件以上の履歴が必要です。時刻には日本時間の`+09:00`まで記録してください。
 
 ## 検査と本番ビルド
 

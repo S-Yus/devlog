@@ -2,7 +2,6 @@
 title: "深層学習仮想環境作成手順"
 description: "WSL: Ubuntuで深層学習用の仮想環境を最低限作成する手順"
 publishedAt: 2026-08-05
-updatedAt: 2026-08-05
 status: verified
 category: setup
 tags:
@@ -14,6 +13,15 @@ environment:
   - "Windows 11"
   - "WSL2 Ubuntu"
 estimatedMinutes: 10
+history:
+  - at: "2026-08-05T23:26:08+09:00"
+    summary: "初版公開"
+  - at: "2026-08-07T06:28:21+09:00"
+    summary: "カテゴリをセットアップへ変更"
+  - at: "2026-08-07T22:43:43+09:00"
+    summary: "本文の句読点を統一"
+  - at: "2026-08-08T00:11:04+09:00"
+    summary: "記事情報から難易度を削除"
 draft: false
 ---
 

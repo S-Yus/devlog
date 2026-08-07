@@ -7,6 +7,7 @@ project: example-project
 status: ongoing
 tags:
   - Development
+history: []
 draft: true
 ---
 
