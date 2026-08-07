@@ -5,6 +5,11 @@ interface LikeCountRow {
   count: number;
 }
 
+interface LikeMatchRow {
+  path: string;
+  voter_id: string;
+}
+
 let schemaReady: Promise<void> | undefined;
 
 export const isArticlePath = (path: string) =>
@@ -43,11 +48,51 @@ export const getLikeCounts = async (db: D1Database, paths: string[]) => {
   return counts;
 };
 
-export const recordLike = async (db: D1Database, path: string, voterId: string) => {
-  const inserted = await db
-    .prepare('INSERT OR IGNORE INTO article_likes (path, voter_id) VALUES (?, ?)')
-    .bind(path, voterId)
-    .run();
+export const getLikeMatches = async (
+  db: D1Database,
+  paths: string[],
+  voterIds: string[],
+) => {
+  const uniquePaths = [...new Set(paths)];
+  const uniqueVoterIds = [...new Set(voterIds)];
+  if (uniquePaths.length === 0 || uniqueVoterIds.length === 0) return [];
+
+  const pathPlaceholders = uniquePaths.map(() => '?').join(', ');
+  const voterPlaceholders = uniqueVoterIds.map(() => '?').join(', ');
+  const result = await db
+    .prepare(
+      `SELECT path, voter_id
+       FROM article_likes
+       WHERE path IN (${pathPlaceholders})
+         AND voter_id IN (${voterPlaceholders})`,
+    )
+    .bind(...uniquePaths, ...uniqueVoterIds)
+    .all<LikeMatchRow>();
+
+  return result.results;
+};
+
+export const recordLike = async (
+  db: D1Database,
+  path: string,
+  voterIds: string[],
+  preferredVoterId: string,
+) => {
+  const uniqueVoterIds = [...new Set(voterIds)];
+  const matches = await getLikeMatches(db, [path], uniqueVoterIds);
+  const matchedVoterIds = new Set(matches.map((match) => match.voter_id));
+  const existingVoterId = uniqueVoterIds.find((voterId) => matchedVoterIds.has(voterId));
+  const voterId = existingVoterId ?? preferredVoterId;
+
+  let accepted = false;
+  if (!existingVoterId) {
+    const inserted = await db
+      .prepare('INSERT OR IGNORE INTO article_likes (path, voter_id) VALUES (?, ?)')
+      .bind(path, voterId)
+      .run();
+    accepted = inserted.meta.changes > 0;
+  }
+
   const count = await db
     .prepare('SELECT COUNT(*) AS count FROM article_likes WHERE path = ?')
     .bind(path)
@@ -55,6 +100,7 @@ export const recordLike = async (db: D1Database, path: string, voterId: string) 
 
   return {
     count: Number(count ?? 0),
-    accepted: inserted.meta.changes > 0,
+    accepted,
+    voterId,
   };
 };

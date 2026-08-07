@@ -23,6 +23,7 @@ const { path } = Astro.props;
 
   interface LikesResponse {
     likes?: Record<string, number>;
+    liked?: Record<string, boolean>;
   }
 
   const voterStorageKey = 'yusei.dev:voter-id';
@@ -69,14 +70,19 @@ const { path } = Astro.props;
 
     if (getStorage(likedKey) === 'true') markLiked();
 
+    const voterId = getVoterId();
     const params = new URLSearchParams({ path });
-    fetch(`/api/likes?${params}`)
+    fetch(`/api/likes?${params}`, { headers: { 'X-Voter-ID': voterId } })
       .then(async (response) => {
         if (!response.ok) throw new Error('Failed to load likes');
         return (await response.json()) as LikesResponse;
       })
       .then((data) => {
         total.textContent = String(data.likes?.[path] ?? 0);
+        if (data.liked?.[path]) {
+          setStorage(likedKey, 'true');
+          markLiked();
+        }
       })
       .catch(() => {
         total.textContent = '—';
@@ -92,7 +98,7 @@ const { path } = Astro.props;
         const response = await fetch('/api/likes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ path, voterId: getVoterId() }),
+          body: JSON.stringify({ path, voterId }),
         });
         if (!response.ok) throw new Error('Failed to save like');
 
