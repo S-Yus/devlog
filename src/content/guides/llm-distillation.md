@@ -13,8 +13,7 @@ environment:
   - "WSL2: Ubuntu"
   - "Python 3.12.x"
 estimatedMinutes: 180
-history: 
-  
+history: []
 draft: true
 ---
 ## 使用環境
