@@ -10,7 +10,6 @@ tags:
 environment:
   - "WSL2 Ubuntu"
   - "Node.js 24"
-difficulty: beginner
 estimatedMinutes: 20
 draft: true
 ---

@@ -23,7 +23,6 @@ const guides = defineCollection({
     category: z.enum(GUIDE_CATEGORY_VALUES),
     tags: z.array(z.string().min(1)),
     environment: z.array(z.string().min(1)),
-    difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
     estimatedMinutes: z.number().int().positive(),
     draft: z.boolean(),
   }),

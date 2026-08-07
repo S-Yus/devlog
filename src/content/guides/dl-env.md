@@ -13,7 +13,6 @@ tags:
 environment:
   - "Windows 11"
   - "WSL2 Ubuntu"
-difficulty: beginner
 estimatedMinutes: 10
 draft: false
 ---

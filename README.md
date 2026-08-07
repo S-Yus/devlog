@@ -194,7 +194,7 @@ push後，GitHub Actionsが品質確認を行い，Cloudflare Pagesが`main`を�
 
 ### Frontmatterの検証エラー
 
-エラーに表示されたMarkdownを開き，必須項目，日付，`status`，`difficulty`，`draft`の型を確認します。許可値は`src/content.config.ts`に定義されています。
+エラーに表示されたMarkdownを開き，必須項目，日付，`status`，`draft`の型を確認します。許可値は`src/content.config.ts`に定義されています。
 
 ### 検索結果が表示されない
 
