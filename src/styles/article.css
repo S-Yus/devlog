@@ -91,52 +91,42 @@
 .article-body pre {
   max-width: 100%;
   margin: 0;
-  padding: 1rem;
+  padding: 1rem 7.75rem 1rem 1rem;
   border: 1px solid #333;
   overflow-x: auto;
   font-size: 0.88rem;
 }
 
 .code-block {
+  position: relative;
   margin-block: 1.25rem;
 }
 
-.code-toolbar {
-  display: flex;
-  min-height: 2.25rem;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  padding-left: 0.75rem;
-  border: 1px solid #333;
-  border-bottom: 0;
-  color: #fff;
-  background: #111;
-  font-family: ui-monospace, monospace;
-  font-size: 0.78rem;
-}
-
-.copy-status {
-  min-width: 8.5rem;
-  text-align: right;
-}
-
 .copy-button {
-  align-self: stretch;
-  min-width: 4.5rem;
-  padding-inline: 0.75rem;
-  border: 0;
-  border-left: 1px solid #777;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+  min-width: 6.5rem;
+  min-height: 2rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #777;
   border-radius: 0;
   color: #fff;
   background: #111;
-  font: inherit;
+  font: 0.78rem ui-monospace, monospace;
   cursor: pointer;
 }
 
-.copy-button:hover {
+.copy-button:hover,
+.copy-button[data-state='success'] {
   color: #000;
   background: #fff;
+}
+
+.copy-button[data-state='error'] {
+  color: #fff;
+  background: #852f00;
 }
 
 .article-actions {

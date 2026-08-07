@@ -11,14 +11,12 @@
     pre.dataset.copyReady = 'true';
 
     const wrapper = document.createElement('div');
-    const toolbar = document.createElement('div');
     const status = document.createElement('span');
     const button = document.createElement('button');
     let statusTimer: number | undefined;
 
     wrapper.className = 'code-block';
-    toolbar.className = 'code-toolbar';
-    status.className = 'copy-status';
+    status.className = 'visually-hidden';
     status.id = `copy-status-${index}`;
     status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite');
@@ -33,17 +31,22 @@
       try {
         await copyText(code.textContent ?? '');
         status.textContent = 'コピーしました';
+        button.textContent = 'コピー完了';
+        button.dataset.state = 'success';
       } catch {
         status.textContent = 'コピーできませんでした';
+        button.textContent = 'コピー失敗';
+        button.dataset.state = 'error';
       }
 
       statusTimer = window.setTimeout(() => {
         status.textContent = '';
+        button.textContent = 'コピー';
+        delete button.dataset.state;
       }, 2400);
     });
 
     pre.before(wrapper);
-    toolbar.append(status, button);
-    wrapper.append(toolbar, pre);
+    wrapper.append(pre, status, button);
   });
 </script>
