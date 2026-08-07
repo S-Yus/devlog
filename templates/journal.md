@@ -1,12 +1,10 @@
 ---
-title: "記事タイトル"
-description: "今回の作業内容の要約"
+title: "{{date}}の日誌"
+description: "今日取り組んだことと考えたこと"
 publishedAt: {{date}}
-kind: worklog
-project: example-project
-status: ongoing
+kind: journal
 tags:
-  - Development
+  - Daily
 draft: true
 ---
 

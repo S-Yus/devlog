@@ -2,8 +2,7 @@
 title: "開設"
 description: "ブログ開設の経緯と抱負"
 publishedAt: 2026-08-05
-project: ex
-status: completed
+kind: journal
 tags:
   - Development
   - Personal

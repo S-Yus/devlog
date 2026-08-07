@@ -13,11 +13,12 @@ type Props =
 const { entry, kind } = Astro.props;
 const data = entry.data;
 const isGuide = kind === 'Guide';
+const isJournal = !isGuide && 'kind' in data && data.kind === 'journal';
 const updatedAt = 'updatedAt' in data ? data.updatedAt : undefined;
 const canonicalPath = `/${isGuide ? 'guides' : 'devlog'}/${entry.id}/`;
 const structuredData = {
   '@context': 'https://schema.org',
-  '@type': 'TechArticle',
+  '@type': isJournal ? 'BlogPosting' : 'TechArticle',
   headline: data.title,
   description: data.description,
   datePublished: data.publishedAt.toISOString(),
@@ -40,7 +41,9 @@ const structuredData = {
 >
   <article class="article" data-pagefind-body>
     <header class="article-header">
-      <p class="eyebrow" data-pagefind-meta="type" data-pagefind-filter="type">{kind}</p>
+      <p class="eyebrow" data-pagefind-meta="type" data-pagefind-filter="type">
+        {isGuide ? kind : `Devlog / ${isJournal ? 'Journal' : 'Worklog'}`}
+      </p>
       <h1 data-pagefind-meta="title">{data.title}</h1>
       <p class="article-description" data-pagefind-meta="description">{data.description}</p>
       <dl class="article-facts">
@@ -54,10 +57,18 @@ const structuredData = {
             <dd><time datetime={updatedAt.toISOString()}>{formatDate(updatedAt)}</time></dd>
           </div>
         )}
-        <div>
-          <dt>状態</dt>
-          <dd>{data.status}</dd>
-        </div>
+        {!isGuide && 'kind' in data && (
+          <div>
+            <dt>種類</dt>
+            <dd>{data.kind === 'journal' ? '日誌' : '作業記録'}</dd>
+          </div>
+        )}
+        {'status' in data && (
+          <div>
+            <dt>状態</dt>
+            <dd>{data.status}</dd>
+          </div>
+        )}
         {isGuide && 'difficulty' in data && (
           <div>
             <dt>難易度</dt>
@@ -77,7 +88,9 @@ const structuredData = {
     </header>
     {!isGuide && (
       <aside class="devlog-notice" aria-label="Devlogについて">
-        この記事は開発途中の記録です。内容は未検証であり，後から変更される場合があります。
+        {isJournal
+          ? 'この記事は日誌です。その時点で考えたことや取り組んだことを記録しています。'
+          : 'この記事は開発途中の作業記録です。内容は未検証であり，後から変更される場合があります。'}
       </aside>
     )}
     <div class="article-body">

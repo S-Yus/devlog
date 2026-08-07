@@ -13,7 +13,8 @@
     "build": "astro check && astro build && pagefind --site dist && npm run check:functions",
     "preview": "pagefind --site dist --serve",
     "new:guide": "node scripts/new-content.mjs guide",
-    "new:devlog": "node scripts/new-content.mjs devlog"
+    "new:devlog": "node scripts/new-content.mjs devlog",
+    "new:journal": "node scripts/new-content.mjs journal"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

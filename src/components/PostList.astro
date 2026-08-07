@@ -6,44 +6,51 @@ interface Post {
   description: string;
   publishedAt: Date;
   href: string;
-  type?: 'Guide' | 'Devlog';
-  category?: string;
+  type?: string;
+  filterValue?: string;
   draft?: boolean;
 }
 
-interface CategoryOption {
+interface FilterOption {
   value: string;
   label: string;
+}
+
+interface FilterConfig {
+  label: string;
+  options: readonly FilterOption[];
+  emptyMessage: string;
 }
 
 interface Props {
   posts: Post[];
   emptyMessage?: string;
   sortable?: boolean;
-  categoryOptions?: readonly CategoryOption[];
+  filter?: FilterConfig;
 }
 
 const {
   posts,
   emptyMessage = '公開中の記事はありません。',
   sortable = false,
-  categoryOptions = [],
+  filter,
 } = Astro.props;
+const filterOptions = filter?.options ?? [];
 ---
 
 {posts.length === 0 ? (
   <p class="empty-state">{emptyMessage}</p>
 ) : (
   <div class="post-index" data-post-index>
-    {(categoryOptions.length > 0 || sortable) && (
+    {(filterOptions.length > 0 || sortable) && (
       <div class="index-controls">
-        {categoryOptions.length > 0 && (
-          <div class="filter-controls" role="group" aria-label="Guideカテゴリ">
-            <span>カテゴリ</span>
-            <button type="button" data-category-filter="all" aria-pressed="true">すべて</button>
-            {categoryOptions.map((category) => (
-              <button type="button" data-category-filter={category.value} aria-pressed="false">
-                {category.label}
+        {filterOptions.length > 0 && (
+          <div class="filter-controls" role="group" aria-label={`${filter?.label ?? '記事'}で絞り込み`}>
+            <span>{filter?.label ?? '絞り込み'}</span>
+            <button type="button" data-post-filter="all" aria-pressed="true">すべて</button>
+            {filterOptions.map((option) => (
+              <button type="button" data-post-filter={option.value} aria-pressed="false">
+                {option.label}
               </button>
             ))}
           </div>
@@ -65,7 +72,7 @@ const {
           data-path={post.href}
           data-published={post.publishedAt.valueOf()}
           data-likes="0"
-          data-category={post.category}
+          data-filter-value={post.filterValue}
         >
           <div class="post-meta">
             {post.type && <span>{post.type}</span>}
@@ -81,7 +88,7 @@ const {
         </li>
       ))}
     </ol>
-    <p class="filter-empty" data-filter-empty hidden>該当するGuideはありません。</p>
+    <p class="filter-empty" data-filter-empty hidden>{filter?.emptyMessage ?? '該当する記事はありません。'}</p>
   </div>
 )}
 
@@ -100,29 +107,29 @@ const {
     const empty = index.querySelector<HTMLElement>('[data-filter-empty]');
     if (!list) return;
 
-    const category = index.dataset.categoryFilter ?? 'all';
+    const selectedFilter = index.dataset.selectedFilter ?? 'all';
     const order = (index.dataset.sortOrder ?? 'new') as SortOrder;
     const items = [...list.querySelectorAll<HTMLLIElement>(':scope > li')];
     let visibleCount = 0;
 
     for (const item of items) {
-      const visible = category === 'all' || item.dataset.category === category;
+      const visible = selectedFilter === 'all' || item.dataset.filterValue === selectedFilter;
       item.hidden = !visible;
       if (visible) visibleCount += 1;
     }
 
     if (empty) empty.hidden = visibleCount !== 0;
     if (status) {
-      const selectedCategory = index.querySelector<HTMLButtonElement>(
-        `[data-category-filter="${category}"]`,
+      const selectedButton = index.querySelector<HTMLButtonElement>(
+        `[data-post-filter="${selectedFilter}"]`,
       );
       const orderLabels: Record<SortOrder, string> = {
         new: '新しい順',
         old: '古い順',
         rating: '高評価順',
       };
-      const categoryLabel = selectedCategory?.textContent?.trim() ?? 'すべて';
-      status.textContent = `${categoryLabel}、${orderLabels[order]}で${visibleCount}件を表示しています`;
+      const filterLabel = selectedButton?.textContent?.trim() ?? 'すべて';
+      status.textContent = `${filterLabel}、${orderLabels[order]}で${visibleCount}件を表示しています`;
     }
   };
 
@@ -151,16 +158,16 @@ const {
   };
 
   for (const index of indexes) {
-    index.dataset.categoryFilter = 'all';
+    index.dataset.selectedFilter = 'all';
     index.dataset.sortOrder = 'new';
 
-    index.querySelectorAll<HTMLButtonElement>('[data-category-filter]').forEach((button) => {
+    index.querySelectorAll<HTMLButtonElement>('[data-post-filter]').forEach((button) => {
       button.addEventListener('click', () => {
-        const category = button.dataset.categoryFilter;
-        if (!category) return;
+        const selectedFilter = button.dataset.postFilter;
+        if (!selectedFilter) return;
 
-        index.dataset.categoryFilter = category;
-        index.querySelectorAll<HTMLButtonElement>('[data-category-filter]').forEach((candidate) => {
+        index.dataset.selectedFilter = selectedFilter;
+        index.querySelectorAll<HTMLButtonElement>('[data-post-filter]').forEach((candidate) => {
           candidate.setAttribute('aria-pressed', String(candidate === button));
         });
         updateIndexView(index);

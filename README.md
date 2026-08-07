@@ -56,13 +56,27 @@ npm run new:guide -- install-lean-on-wsl
 
 `src/content/guides/install-lean-on-wsl.md`がテンプレートから生成されます。
 
-Devlogは次のコマンドで作成します。
+特定の実装や検証を追う作業記録は次のコマンドで作成します。
 
 ```bash
 npm run new:devlog -- first-distributed-llm-test
 ```
 
 `src/content/devlog/first-distributed-llm-test.md`が生成されます。slugには小文字英数字と単語間のハイフンだけを使用できます。同名ファイルは上書きされません。
+
+日誌は次のコマンドで作成します。slugを省略すると当日の日付が使われます。
+
+```bash
+npm run new:journal
+```
+
+テーマをファイル名に含める場合：
+
+```bash
+npm run new:journal -- 2026-08-07-cloudflare-settings
+```
+
+日誌は`YYYY-MM-DD`または`YYYY-MM-DD-topic`，作業記録は内容を表すslugを使用します。どちらも`src/content/devlog/`へ生成され，Frontmatterの`kind`で区別されます。
 
 どちらも作成直後は`draft: true`です。本文を編集し，公開準備ができたらFrontmatterを次のように変更します。
 
@@ -170,7 +184,7 @@ git commit -m "Add guide: article title"
 git push
 ```
 
-push後，GitHub Actionsが品質確認を行い，Cloudflare Pagesが`main`を自動ビルドして公開します。Devlogの場合は最初のコマンドを`npm run new:devlog -- article-slug`へ変更します。
+push後，GitHub Actionsが品質確認を行い，Cloudflare Pagesが`main`を自動ビルドして公開します。作業記録は最初のコマンドを`npm run new:devlog -- article-slug`，日誌は`npm run new:journal`へ変更します。
 
 ## トラブルシューティング
 

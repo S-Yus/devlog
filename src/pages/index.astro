@@ -38,7 +38,12 @@ const description = 'Yuseiの技術メモ。確認済みの手順と，開発中
         <h2 id="latest-devlog">Devlog</h2>
         <a href="/devlog/">一覧 →</a>
       </div>
-      <PostList posts={devlog.map((entry) => ({ ...entry.data, href: `/devlog/${entry.id}/`, type: 'Devlog', draft: entry.data.draft }))} />
+      <PostList posts={devlog.map((entry) => ({
+        ...entry.data,
+        href: `/devlog/${entry.id}/`,
+        type: entry.data.kind === 'journal' ? 'Journal' : 'Worklog',
+        draft: entry.data.draft,
+      }))} />
     </section>
   </div>
 

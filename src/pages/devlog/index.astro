@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import PostList from '../../components/PostList.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { isVisible, newestFirst } from '../../lib/content';
+import { DEVLOG_KIND_OPTIONS } from '../../lib/devlog-kinds';
 
 const entries = (await getCollection('devlog')).filter(isVisible).sort(newestFirst);
 ---
@@ -11,7 +12,17 @@ const entries = (await getCollection('devlog')).filter(isVisible).sort(newestFir
   <header class="page-header">
     <p class="eyebrow">DEVLOG / {entries.length}</p>
     <h1>Devlog</h1>
-    <p>作業中のメモ。内容は変わります。</p>
+    <p>日々の記録と、特定の実装・検証を追う作業記録。</p>
   </header>
-  <PostList sortable posts={entries.map((entry) => ({ ...entry.data, href: `/devlog/${entry.id}/`, draft: entry.data.draft }))} />
+  <PostList
+    sortable
+    filter={{ label: '種類', options: DEVLOG_KIND_OPTIONS, emptyMessage: '該当するDevlogはありません。' }}
+    posts={entries.map((entry) => ({
+      ...entry.data,
+      href: `/devlog/${entry.id}/`,
+      type: entry.data.kind === 'journal' ? 'Journal' : 'Worklog',
+      filterValue: entry.data.kind,
+      draft: entry.data.draft,
+    }))}
+  />
 </BaseLayout>

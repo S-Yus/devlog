@@ -2,8 +2,7 @@
 title: "2026/08/06の作業内容"
 description: "掲示板を作りはじめた"
 publishedAt: 2026-08-06
-project: bulletin-board
-status: ongoing
+kind: journal
 tags:
   - Development
   - Python

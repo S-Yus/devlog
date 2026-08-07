@@ -16,7 +16,12 @@ const entries = (await getCollection('guides')).filter(isVisible).sort(newestFir
   </header>
   <PostList
     sortable
-    categoryOptions={GUIDE_CATEGORY_OPTIONS}
-    posts={entries.map((entry) => ({ ...entry.data, href: `/guides/${entry.id}/`, draft: entry.data.draft }))}
+    filter={{ label: 'カテゴリ', options: GUIDE_CATEGORY_OPTIONS, emptyMessage: '該当するGuideはありません。' }}
+    posts={entries.map((entry) => ({
+      ...entry.data,
+      href: `/guides/${entry.id}/`,
+      filterValue: entry.data.category,
+      draft: entry.data.draft,
+    }))}
   />
 </BaseLayout>
