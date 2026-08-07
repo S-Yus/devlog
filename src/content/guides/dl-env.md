@@ -1,7 +1,8 @@
 ---
-title: "深層学習仮想環境作成手順"
+title: "深層学習のための仮想環境作成"
 description: "WSL: Ubuntuで深層学習用の仮想環境を最低限作成する手順"
 publishedAt: 2026-08-05
+updatedAt: 2026-08-08
 status: verified
 category: setup
 tags:
@@ -18,34 +19,34 @@ history:
     summary: "初版公開"
   - at: "2026-08-07T06:28:21+09:00"
     summary: "カテゴリをセットアップへ変更"
-  - at: "2026-08-07T22:43:43+09:00"
-    summary: "本文の句読点を統一"
-  - at: "2026-08-08T00:11:04+09:00"
-    summary: "記事情報から難易度を削除"
 draft: false
 ---
 
-### 1. 仮想環境を作って有効化
+## 1. 仮想環境を作って有効化
 ```bash
 python3 -m venv .venv
+```
+```bash
 source .venv/bin/activate
 ```
 
-### 2. Pythonインタプリタを.venvにする
-> 1. `Ctrl + Shift + P`
->
-> 2. `Python: Select Interpreter` を選択
->
-> 3. `.venv` を選択
+## 2. Pythonインタプリタを.venvにする
+  1. `Ctrl + Shift + P`でコマンドパレットを起動
 
-### 3. pipを更新，CPU版でPyTorchを入れる
+  2. `Python: Select Interpreter` を入力・選択
+
+  3. `.venv` を選択
+
+## 3. pipを更新，CPU版でPyTorchを入れる
 ```bash
 python -m pip install --upgrade pip
+```
+```bash
 pip install torch torchvision torchaudio
 ```
 
-### 4. 動作確認
-`test_torch.py`を作成，
+## 4. 動作確認
+動作確認する場合は`test_torch.py`を作成:
 ```python
 import torch
 
@@ -58,6 +59,7 @@ print(x * 2)
 ```bash
 python3 test_torch.py
 ```
+期待する実行結果:
 ```text
 2.10.0+cu128
 cuda available: True
@@ -65,13 +67,14 @@ tensor([2., 4., 6.])
 ```
 などとなればOK.
 
-### 5. ライブラリを追加
+## 5. ライブラリを追加
+作業に必要なライブラリを追加
 ```bash
 pip install numpy pandas matplotlib scikit-learn jupyter ipykernel
 ```
 
 ---
-### 最小フォルダ構成例
+## 最小フォルダ構成例
 ```text
 dl-test/
 ├── .venv/
@@ -82,3 +85,5 @@ dl-test/
 ├── test_torch.py
 └── requirements.txt
 ```
+
+## 更新履歴
