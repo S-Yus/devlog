@@ -31,7 +31,7 @@ source .venv/bin/activate
 >
 > 3. `.venv` を選択
 
-### 3. pipを更新、CPU版でPyTorchを入れる
+### 3. pipを更新，CPU版でPyTorchを入れる
 ```bash
 python -m pip install --upgrade pip
 pip install torch torchvision torchaudio
