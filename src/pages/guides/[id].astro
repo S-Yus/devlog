@@ -4,14 +4,37 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 import { isVisible } from '../../lib/content';
 
 export async function getStaticPaths() {
-  const entries = (await getCollection('guides')).filter(isVisible);
-  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+  const entries = (await getCollection('guides'))
+    .filter(isVisible)
+    .sort(
+      (a, b) =>
+        a.data.publishedAt.valueOf() - b.data.publishedAt.valueOf() ||
+        a.id.localeCompare(b.id),
+    );
+
+  return entries.map((entry, index) => {
+    const previousEntry = entries[index - 1];
+    const nextEntry = entries[index + 1];
+
+    return {
+      params: { id: entry.id },
+      props: {
+        entry,
+        previous: previousEntry
+          ? { title: previousEntry.data.title, href: `/guides/${previousEntry.id}/` }
+          : undefined,
+        next: nextEntry
+          ? { title: nextEntry.data.title, href: `/guides/${nextEntry.id}/` }
+          : undefined,
+      },
+    };
+  });
 }
 
-const { entry } = Astro.props;
+const { entry, previous, next } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<ArticleLayout entry={entry} kind="Guide">
+<ArticleLayout entry={entry} kind="Guide" previous={previous} next={next}>
   <Content />
 </ArticleLayout>

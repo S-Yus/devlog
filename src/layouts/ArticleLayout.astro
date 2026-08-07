@@ -6,11 +6,20 @@ import BaseLayout from './BaseLayout.astro';
 import { formatDate } from '../lib/content';
 import '../styles/article.css';
 
-type Props =
-  | { entry: CollectionEntry<'guides'>; kind: 'Guide' }
-  | { entry: CollectionEntry<'devlog'>; kind: 'Devlog' };
+interface ArticleLink {
+  title: string;
+  href: string;
+}
 
-const { entry, kind } = Astro.props;
+type Props = (
+  | { entry: CollectionEntry<'guides'>; kind: 'Guide' }
+  | { entry: CollectionEntry<'devlog'>; kind: 'Devlog' }
+) & {
+  previous?: ArticleLink;
+  next?: ArticleLink;
+};
+
+const { entry, kind, previous, next } = Astro.props;
 const data = entry.data;
 const isGuide = kind === 'Guide';
 const isJournal = !isGuide && 'kind' in data && data.kind === 'journal';
@@ -96,6 +105,22 @@ const structuredData = {
     <div class="article-body">
       <slot />
     </div>
+    {(previous || next) && (
+      <nav class="article-pagination" aria-label="前後の記事">
+        {previous && (
+          <a class="article-pagination-link article-pagination-previous" href={previous.href} rel="prev">
+            <span>← 前の記事</span>
+            <strong>{previous.title}</strong>
+          </a>
+        )}
+        {next && (
+          <a class="article-pagination-link article-pagination-next" href={next.href} rel="next">
+            <span>次の記事 →</span>
+            <strong>{next.title}</strong>
+          </a>
+        )}
+      </nav>
+    )}
     <footer class="article-actions">
       <LikeButton path={canonicalPath} />
     </footer>
