@@ -1,6 +1,6 @@
 # Yusei.dev
 
-技術ツールの実行手順，トラブルシューティング，開発・研究の記録を公開する，静的な技術ブログ兼ポートフォリオサイトです。完成版の記事を **Guides**，検証途中の記録を **Devlog** として管理します。記事はCMSを使わずMarkdownで管理し，いいね数だけをCloudflare D1へ保存します。外部トラッキングは使用しません。
+技術ツールの実行手順，トラブルシューティング，開発・研究の記録を公開する，静的な技術ブログ兼ポートフォリオサイトです。完成版の記事を **Guides**，検証途中の記録を **Devlog**，読んだ論文や記事の要点と考察を **Reading** として管理します。記事はCMSを使わずMarkdownで管理し，いいね数だけをCloudflare D1へ保存します。外部トラッキングは使用しません。
 
 ## 使用技術
 
@@ -77,6 +77,14 @@ npm run new:journal -- 2026-08-07-cloudflare-settings
 ```
 
 日誌は`YYYY-MM-DD`または`YYYY-MM-DD-topic`，作業記録は内容を表すslugを使用します。どちらも`src/content/devlog/`へ生成され，Frontmatterの`kind`で区別されます。
+
+論文，技術記事，公式資料の読書メモは次のコマンドで作成します。
+
+```bash
+npm run new:reading -- performance-law-of-large-language-models
+```
+
+`src/content/reading/performance-law-of-large-language-models.md`が生成されます。`sourceType`は`paper`，`article`，`documentation`から選びます。
 
 どちらも作成直後は`draft: true`です。本文を編集し，公開準備ができたらFrontmatterを次のように変更します。
 

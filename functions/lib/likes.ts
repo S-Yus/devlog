@@ -13,7 +13,7 @@ interface LikeMatchRow {
 let schemaReady: Promise<void> | undefined;
 
 export const isArticlePath = (path: string) =>
-  /^\/(guides|devlog)\/[a-z0-9]+(?:-[a-z0-9]+)*\/$/.test(path);
+  /^\/(guides|devlog|reading)\/[a-z0-9]+(?:-[a-z0-9]+)*\/$/.test(path);
 
 export const isVoterId = (value: string) => /^[a-zA-Z0-9-]{16,80}$/.test(value);
 

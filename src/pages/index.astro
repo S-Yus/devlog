@@ -3,12 +3,15 @@ import { getCollection } from 'astro:content';
 import PostList from '../components/PostList.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { isVisible, newestFirst } from '../lib/content';
+import { getReadingSourceTypeListLabel } from '../lib/reading-source-types';
 
 const guideEntries = (await getCollection('guides')).filter(isVisible).sort(newestFirst);
 const devlogEntries = (await getCollection('devlog')).filter(isVisible).sort(newestFirst);
+const readingEntries = (await getCollection('reading')).filter(isVisible).sort(newestFirst);
 const guides = guideEntries.slice(0, 5);
 const devlog = devlogEntries.slice(0, 5);
-const description = 'Yuseiの技術メモ。確認済みの手順と，開発中の記録。';
+const reading = readingEntries.slice(0, 5);
+const description = 'Yuseiの技術メモ。確認済みの手順，開発中の記録，読んだ資料の考察。';
 ---
 
 <BaseLayout description={description}>
@@ -17,10 +20,11 @@ const description = 'Yuseiの技術メモ。確認済みの手順と，開発中
       <p class="eyebrow">INDEX / YUSEI.DEV</p>
       <h1>Yusei.dev</h1>
     </div>
-    <p>確認済みの手順は Guides，作業中の記録は Devlog。</p>
+    <p>確認済みの手順は Guides，作業中の記録は Devlog，読んだ資料は Reading。</p>
     <dl class="site-stats" aria-label="公開件数">
       <div><dt>Guides</dt><dd>{guideEntries.length}</dd></div>
       <div><dt>Devlog</dt><dd>{devlogEntries.length}</dd></div>
+      <div><dt>Reading</dt><dd>{readingEntries.length}</dd></div>
     </dl>
   </section>
 
@@ -46,6 +50,19 @@ const description = 'Yuseiの技術メモ。確認済みの手順と，開発中
       }))} />
     </section>
   </div>
+
+  <section class="home-reading" aria-labelledby="latest-reading">
+    <div class="section-heading">
+      <h2 id="latest-reading">Reading</h2>
+      <a href="/reading/">一覧 →</a>
+    </div>
+    <PostList posts={reading.map((entry) => ({
+      ...entry.data,
+      href: `/reading/${entry.id}/`,
+      type: getReadingSourceTypeListLabel(entry.data.sourceType),
+      draft: entry.data.draft,
+    }))} />
+  </section>
 
   <section class="project-callout" aria-labelledby="projects-heading">
     <div>

@@ -3,7 +3,8 @@ import type { CollectionEntry } from 'astro:content';
 import CodeCopy from '../components/CodeCopy.astro';
 import LikeButton from '../components/LikeButton.astro';
 import BaseLayout from './BaseLayout.astro';
-import { formatDateTime } from '../lib/content';
+import { formatDate, formatDateTime } from '../lib/content';
+import { getReadingSourceTypeLabel } from '../lib/reading-source-types';
 import '../styles/article.css';
 
 interface ArticleLink {
@@ -14,6 +15,7 @@ interface ArticleLink {
 type Props = (
   | { entry: CollectionEntry<'guides'>; kind: 'Guide' }
   | { entry: CollectionEntry<'devlog'>; kind: 'Devlog' }
+  | { entry: CollectionEntry<'reading'>; kind: 'Reading' }
 ) & {
   previous?: ArticleLink;
   next?: ArticleLink;
@@ -22,13 +24,17 @@ type Props = (
 const { entry, kind, previous, next } = Astro.props;
 const data = entry.data;
 const isGuide = kind === 'Guide';
-const isJournal = !isGuide && 'kind' in data && data.kind === 'journal';
+const isDevlog = kind === 'Devlog';
+const isReading = kind === 'Reading';
+const isJournal = isDevlog && 'kind' in data && data.kind === 'journal';
 const publishedAt = data.history[0]?.at ?? data.publishedAt;
 const updatedAt = data.history.length > 1 ? data.history.at(-1)?.at : undefined;
-const canonicalPath = `/${isGuide ? 'guides' : 'devlog'}/${entry.id}/`;
+const sectionPath = isGuide ? 'guides' : isReading ? 'reading' : 'devlog';
+const canonicalPath = `/${sectionPath}/${entry.id}/`;
+const readingSourceLabel = 'sourceType' in data ? getReadingSourceTypeLabel(data.sourceType) : undefined;
 const structuredData = {
   '@context': 'https://schema.org',
-  '@type': isJournal ? 'BlogPosting' : 'TechArticle',
+  '@type': isJournal ? 'BlogPosting' : isReading ? 'Article' : 'TechArticle',
   headline: data.title,
   description: data.description,
   datePublished: publishedAt.toISOString(),
@@ -37,6 +43,7 @@ const structuredData = {
   publisher: { '@type': 'Person', name: 'Yusei' },
   mainEntityOfPage: new URL(canonicalPath, Astro.site ?? Astro.url.origin).href,
   inLanguage: 'ja',
+  ...('sourceUrl' in data ? { citation: data.sourceUrl } : {}),
 };
 ---
 
@@ -52,7 +59,11 @@ const structuredData = {
   <article class="article" data-pagefind-body>
     <header class="article-header">
       <p class="eyebrow" data-pagefind-meta="type" data-pagefind-filter="type">
-        {isGuide ? kind : `Devlog / ${isJournal ? 'Journal' : 'Worklog'}`}
+        {isGuide
+          ? kind
+          : isReading
+            ? `Reading / ${readingSourceLabel}`
+            : `Devlog / ${isJournal ? 'Journal' : 'Worklog'}`}
       </p>
       <h1 data-pagefind-meta="title">{data.title}</h1>
       <p class="article-description" data-pagefind-meta="description">{data.description}</p>
@@ -73,6 +84,18 @@ const structuredData = {
             <dd>{data.kind === 'journal' ? '日誌' : '作業記録'}</dd>
           </div>
         )}
+        {isReading && 'sourceType' in data && (
+          <div>
+            <dt>資料種別</dt>
+            <dd>{readingSourceLabel}</dd>
+          </div>
+        )}
+        {isReading && 'readAt' in data && (
+          <div>
+            <dt>読了</dt>
+            <dd><time datetime={data.readAt.toISOString()}>{formatDate(data.readAt)}</time></dd>
+          </div>
+        )}
         {'status' in data && (
           <div>
             <dt>状態</dt>
@@ -90,11 +113,18 @@ const structuredData = {
         {data.tags.map((tag) => <li>{tag}</li>)}
       </ul>
     </header>
-    {!isGuide && (
+    {isDevlog && (
       <aside class="devlog-notice" aria-label="Devlogについて">
         {isJournal
           ? 'この記事は日誌です。その時点で考えたことや取り組んだことを記録しています。'
           : 'この記事は開発途中の作業記録です。内容は未検証であり，後から変更される場合があります。'}
+      </aside>
+    )}
+    {isReading && 'sourceUrl' in data && (
+      <aside class="reading-source" aria-label="参照元">
+        <p class="eyebrow">SOURCE</p>
+        <a href={data.sourceUrl} rel="external">{data.sourceTitle} ↗</a>
+        {data.authors.length > 0 && <p>{data.authors.join(', ')}</p>}
       </aside>
     )}
     <div class="article-body">

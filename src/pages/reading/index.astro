@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import PostList from '../../components/PostList.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { isVisible, newestFirst } from '../../lib/content';
+import {
+  getReadingSourceTypeListLabel,
+  READING_SOURCE_TYPE_OPTIONS,
+} from '../../lib/reading-source-types';
+
+const entries = (await getCollection('reading')).filter(isVisible).sort(newestFirst);
+---
+
+<BaseLayout title="Reading" description="読んだ論文，技術記事，公式資料の要点と考察をまとめています。">
+  <header class="page-header">
+    <p class="eyebrow">READING / {entries.length}</p>
+    <h1>Reading</h1>
+    <p>読んだ論文や記事の要点，疑問，自分なりの考察。</p>
+  </header>
+  <PostList
+    sortable
+    filter={{ label: '資料種別', options: READING_SOURCE_TYPE_OPTIONS, emptyMessage: '該当するReadingはありません。' }}
+    posts={entries.map((entry) => ({
+      ...entry.data,
+      href: `/reading/${entry.id}/`,
+      type: getReadingSourceTypeListLabel(entry.data.sourceType),
+      filterValue: entry.data.sourceType,
+      draft: entry.data.draft,
+    }))}
+  />
+</BaseLayout>

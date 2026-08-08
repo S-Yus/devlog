@@ -3,6 +3,7 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { DEVLOG_KIND_VALUES } from './lib/devlog-kinds';
 import { GUIDE_CATEGORY_VALUES } from './lib/guide-categories';
+import { READING_SOURCE_TYPE_VALUES } from './lib/reading-source-types';
 
 const historySchema = z
   .array(
@@ -91,4 +92,23 @@ const devlog = defineCollection({
   ),
 });
 
-export const collections = { guides, devlog };
+const reading = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/reading' }),
+  schema: z
+    .object({
+      title: z.string().min(1),
+      description: z.string().min(1),
+      publishedAt: z.coerce.date(),
+      sourceType: z.enum(READING_SOURCE_TYPE_VALUES),
+      sourceTitle: z.string().min(1),
+      sourceUrl: z.url(),
+      authors: z.array(z.string().min(1)),
+      readAt: z.coerce.date(),
+      tags: z.array(z.string().min(1)),
+      history: historySchema,
+      draft: z.boolean(),
+    })
+    .superRefine(requirePublishedHistory),
+});
+
+export const collections = { guides, devlog, reading };

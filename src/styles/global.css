@@ -215,7 +215,7 @@ main {
 
 .site-stats {
   display: grid;
-  grid-template-columns: repeat(2, auto);
+  grid-template-columns: repeat(3, auto);
   margin: 0;
   border: 1px solid var(--strong-line);
 }
@@ -272,6 +272,11 @@ main {
 
 .home-grid > section:last-child {
   padding-left: var(--space);
+}
+
+.home-reading {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--strong-line);
 }
 
 .section-heading {

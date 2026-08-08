@@ -1,0 +1,40 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { isVisible } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const entries = (await getCollection('reading'))
+    .filter(isVisible)
+    .sort(
+      (a, b) =>
+        a.data.publishedAt.valueOf() - b.data.publishedAt.valueOf() ||
+        a.id.localeCompare(b.id),
+    );
+
+  return entries.map((entry, index) => {
+    const previousEntry = entries[index - 1];
+    const nextEntry = entries[index + 1];
+
+    return {
+      params: { id: entry.id },
+      props: {
+        entry,
+        previous: previousEntry
+          ? { title: previousEntry.data.title, href: `/reading/${previousEntry.id}/` }
+          : undefined,
+        next: nextEntry
+          ? { title: nextEntry.data.title, href: `/reading/${nextEntry.id}/` }
+          : undefined,
+      },
+    };
+  });
+}
+
+const { entry, previous, next } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ArticleLayout entry={entry} kind="Reading" previous={previous} next={next}>
+  <Content />
+</ArticleLayout>

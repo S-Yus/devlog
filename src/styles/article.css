@@ -67,6 +67,29 @@
   font-size: 0.92rem;
 }
 
+.reading-source {
+  margin: 0 0 2rem;
+  padding: 1rem;
+  border: 1px solid var(--strong-line);
+  font-family: ui-monospace, monospace;
+}
+
+.reading-source .eyebrow {
+  margin-bottom: 0.35rem;
+}
+
+.reading-source > a {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.reading-source > p:last-child:not(.eyebrow) {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+}
+
 .article-body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow-wrap: anywhere;

@@ -10,10 +10,11 @@ const settings = {
   guide: { template: 'guide.md', directory: 'guides' },
   devlog: { template: 'devlog.md', directory: 'devlog' },
   journal: { template: 'journal.md', directory: 'devlog' },
+  reading: { template: 'reading.md', directory: 'reading' },
 };
 
 if (!Object.hasOwn(settings, contentType)) {
-  console.error('記事種別は guide、devlog、journal のいずれかを指定してください。');
+  console.error('記事種別は guide、devlog、journal、reading のいずれかを指定してください。');
   process.exit(1);
 }
 

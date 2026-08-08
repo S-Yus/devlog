@@ -22,11 +22,20 @@ export async function GET(context: APIContext) {
       link: `/devlog/${entry.id}/`,
       data: { publishedAt: entry.data.publishedAt },
     }));
-  const items = [...guides, ...devlog].sort(newestFirst);
+  const reading = (await getCollection('reading'))
+    .filter((entry) => !entry.data.draft)
+    .map((entry) => ({
+      title: entry.data.title,
+      description: entry.data.description,
+      pubDate: entry.data.publishedAt,
+      link: `/reading/${entry.id}/`,
+      data: { publishedAt: entry.data.publishedAt },
+    }));
+  const items = [...guides, ...devlog, ...reading].sort(newestFirst);
 
   return rss({
     title: 'Yusei.dev',
-    description: '技術ガイドと開発・研究の記録',
+    description: '技術ガイド，開発・研究の記録，読んだ資料の考察',
     site: context.site ?? 'https://yusei.dev',
     items,
     customData: '<language>ja</language>',

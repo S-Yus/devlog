@@ -18,4 +18,5 @@ draft: true
 
 - [Guide一覧](/guides/)
 - [Devlog一覧](/devlog/)
+- [Reading一覧](/reading/)
 - [Projects](/projects/)
