@@ -7,7 +7,8 @@ sourceTitle: "原題"
 sourceUrl: "https://example.com"
 authors:
   - "著者名"
-readAt: {{date}}
+# 読み終えたら YYYY-MM-DDを入力。途中なら空欄のまま。
+readAt:
 tags:
   - Reading
 history: []

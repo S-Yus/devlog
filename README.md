@@ -84,7 +84,7 @@ npm run new:journal -- 2026-08-07-cloudflare-settings
 npm run new:reading -- performance-law-of-large-language-models
 ```
 
-`src/content/reading/performance-law-of-large-language-models.md`が生成されます。`sourceType`は`paper`，`article`，`documentation`から選びます。
+`src/content/reading/performance-law-of-large-language-models.md`が生成されます。`sourceType`は`paper`，`article`，`documentation`から選びます。`readAt`は読書中なら空欄のまま，読み終えたら`YYYY-MM-DD`形式で読了日を入れます。空欄の記事には自動で「読書中」と表示されます。
 
 どちらも作成直後は`draft: true`です。本文を編集し，公開準備ができたらFrontmatterを次のように変更します。
 

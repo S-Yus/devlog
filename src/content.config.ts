@@ -103,7 +103,10 @@ const reading = defineCollection({
       sourceTitle: z.string().min(1),
       sourceUrl: z.url(),
       authors: z.array(z.string().min(1)),
-      readAt: z.coerce.date(),
+      readAt: z.preprocess(
+        (value) => (value === null || value === '' ? undefined : value),
+        z.coerce.date().optional(),
+      ),
       tags: z.array(z.string().min(1)),
       history: historySchema,
       draft: z.boolean(),

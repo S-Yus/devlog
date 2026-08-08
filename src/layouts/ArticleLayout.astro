@@ -32,6 +32,7 @@ const updatedAt = data.history.length > 1 ? data.history.at(-1)?.at : undefined;
 const sectionPath = isGuide ? 'guides' : isReading ? 'reading' : 'devlog';
 const canonicalPath = `/${sectionPath}/${entry.id}/`;
 const readingSourceLabel = 'sourceType' in data ? getReadingSourceTypeLabel(data.sourceType) : undefined;
+const readAt = 'sourceType' in data ? data.readAt : undefined;
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': isJournal ? 'BlogPosting' : isReading ? 'Article' : 'TechArticle',
@@ -90,11 +91,18 @@ const structuredData = {
             <dd>{readingSourceLabel}</dd>
           </div>
         )}
-        {isReading && 'readAt' in data && (
-          <div>
-            <dt>読了</dt>
-            <dd><time datetime={data.readAt.toISOString()}>{formatDate(data.readAt)}</time></dd>
-          </div>
+        {isReading && (
+          readAt ? (
+            <div>
+              <dt>読了</dt>
+              <dd><time datetime={readAt.toISOString()}>{formatDate(readAt)}</time></dd>
+            </div>
+          ) : (
+            <div>
+              <dt>状態</dt>
+              <dd>読書中</dd>
+            </div>
+          )
         )}
         {'status' in data && (
           <div>
