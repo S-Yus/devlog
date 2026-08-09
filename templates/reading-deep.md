@@ -12,71 +12,71 @@ status: unread
 # 読み終えたら YYYY-MM-DDを入力。途中なら空欄のまま。
 readAt: 
 tags:
-  - Reading
-  - Deep Read
+  - 読書
+  - 精読
 history: []
 draft: true
 ---
 
-## TL;DR
+## 要点
 
 <!-- この論文を1〜3文で説明する。 -->
 
 > **一言で言うと：**
 
-## Problem
+## 問題設定
 
 <!-- この論文は何を問題としているか。 -->
 
-## Motivation
+## 目的
 
 <!-- なぜこの問題を解く必要があるのか。 -->
 
-## Background
+## 前提
 
 <!-- 理解に必要な前提知識がある場合のみ書く。 -->
 
-## Existing Approaches
+## 既存手法
 
 <!-- 従来手法とその限界。 -->
 
-### Limitations of Existing Approaches
+### 既存手法の限界
 
-## Key Idea
+## 核心
 
 <!-- 核心となるアイデアを自分の言葉で書く。 -->
 
 > 
 
-## Method
+## 提案手法
 
 <!-- アーキテクチャ，アルゴリズム，数式，学習・推論方法のうち必要なものだけ書く。 -->
 
-### Architecture
+### 構成
 
-### Objective / Loss
+### 目的関数・損失関数
 
-### Algorithm
+### アルゴリズム
 
-## Experiments
+## 実験
 
-### Dataset
+### データセット
 
-### Baselines
+### 比較手法
 
-### Metrics
+### 評価指標
 
-### Setup
+### 実験条件
 
 <!-- モデルサイズ，計算環境，学習条件などの重要なもの。 -->
 
-## Results
+## 結果
 
 <!-- 主要な結果と，それを支える数値。 -->
 
-### Ablation
+### アブレーション
 
-## Contributions
+## 貢献
 
 <!-- 著者が主張する主な貢献。 -->
 
@@ -84,27 +84,27 @@ draft: true
 2. 
 3. 
 
-## Limitations
+## 限界
 
-### Authors' Limitations
+### 著者が述べる限界
 
-### My Concerns
+### 気になった点
 
-## My Interpretation
+## 自分の解釈
 
 <!-- 論文に直接書かれている内容と，自分の解釈を分ける。 -->
 
-## Questions
+## 疑問と確認事項
 
 <!-- 疑問，未確認の点，次に調べること。 -->
 
-## Ideas
+## 着想
 
 ### {{date}}
 
 <!-- この論文から考えた研究アイデアや実験案。 -->
 
-## Important Passages
+## 重要な箇所
 
 ### p.X
 
@@ -112,32 +112,32 @@ draft: true
 
 > 短い引用または要約
 
-**Why important**
+**重要な理由**
 
-## Related Papers
+## 関連論文
 
-### Paper Title
+### 論文名
 
-**Relation:** Foundation / Extension / Similar / Alternative / Contradiction
+**関係:** 基礎 / 発展 / 類似 / 代替 / 反証
 
 <!-- 関係を簡潔に説明する。 -->
 
-## Reading History
+## 読書履歴
 
 ### {{date}}
 
-**Status:** Unread
+**状態:** 未読
 
 <!-- 今回読んだ範囲と理解できたこと。 -->
 
-### Remaining
+### 未確認事項
 
 <!-- まだ理解できていないこと，次に読む箇所。 -->
 
-## References
+## 参照先
 
-- [Paper](https://example.com)
-- [Code](https://example.com)
+- [論文](https://example.com)
+- [コード](https://example.com)
 
 ## 関連リンク
 

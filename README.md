@@ -84,7 +84,7 @@ npm run new:journal -- 2026-08-07-cloudflare-settings
 npm run new:reading -- performance-law-of-large-language-models
 ```
 
-メソッド，実験条件，限界，関連論文まで整理する「がっつり読み」は次を使います。
+提案手法，実験条件，限界，関連論文まで整理する「がっつり読み」は次を使います。
 
 ```bash
 npm run new:reading:deep -- performance-law-of-large-language-models
