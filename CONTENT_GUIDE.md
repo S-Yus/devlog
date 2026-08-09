@@ -1,6 +1,6 @@
 # コンテンツ基準
 
-記事を書き始める前に，GuideかDevlogかを決めます。Projectsは記事ではなく制作物の紹介に使います。
+記事を書き始める前に，Guide，Devlog，Readingのどれに入れるかを決めます。Projectsは記事ではなく制作物の紹介に使います。
 
 ## Guide
 
@@ -67,7 +67,7 @@ status: deprecated
 
 ## 更新履歴
 
-GuideとDevlogは，Frontmatterの`history`で公開・更新履歴を管理します。本文に`更新履歴`見出しを手書きする必要はありません。
+Guide，Devlog，Readingは，Frontmatterの`history`で公開・更新履歴を管理します。本文に`更新履歴`見出しを手書きする必要はありません。
 
 ```yaml
 history:
@@ -88,12 +88,13 @@ history:
 
 ## テンプレートの関連リンク
 
-GuideとDevlogの新規テンプレートは，本文に小見出しを自動生成せず，末尾の`関連リンク`だけを用意します。記事に必要な見出しは内容に合わせて追加します。
+GuideとDevlogの新規テンプレートは，本文に小見出しを自動生成せず，末尾の`関連リンク`だけを用意します。Readingは読書メモ用の見出しと`関連リンク`を用意します。不要な見出しは削除してかまいません。
 
-`関連リンク`には次の3リンクを必ず含めます。
+`関連リンク`には次の4リンクを必ず含めます。
 
 - [Guide一覧](/guides/)
 - [Devlog一覧](/devlog/)
+- [Reading一覧](/reading/)
 - [Projects](/projects/)
 
 ## Devlog
@@ -171,6 +172,55 @@ npm run new:devlog -- bulletin-board-auth
 
 検証が完了し，他の人が再現できる内容になったら，別途Guideとしてまとめます。元のDevlogには完成したGuideへのリンクを追加します。
 
+## Reading
+
+読んだ論文，技術記事，公式資料の要点，疑問，自分の解釈を残す場所です。手順を再現させる記事はGuide，自分で行った開発・検証の経過はDevlogに分けます。
+
+### 資料種別
+
+| `sourceType` | 内容 |
+| --- | --- |
+| `paper` | 論文，プレプリント |
+| `article` | 技術記事，ブログ，解説 |
+| `documentation` | 公式ドキュメント，仕様書 |
+
+### ざっくり読み
+
+まず要点と価値を判断したい資料に使います。TL;DR，問題，核心となるアイデア，主要結果，自分の解釈，疑問だけを記録します。
+
+```bash
+npm run new:reading -- paper-slug
+```
+
+### がっつり読み
+
+今後の研究や実装で参照する重要な論文に使います。背景，従来手法，メソッド，実験条件，Ablation，限界，関連論文，読書履歴まで整理します。
+
+```bash
+npm run new:reading:deep -- paper-slug
+```
+
+### 読書状態
+
+| `status` | 使う場面 |
+| --- | --- |
+| `unread` | 未読。読む予定だけ登録した |
+| `skimmed` | ざっくり読みを終えた |
+| `read` | 全体を読み終えた |
+| `deep-read` | 手法や実験結果まで精読した |
+
+```yaml
+status: skimmed
+```
+
+`readAt: `は読書中なら空欄のままにします。読み終えたら読了日を入れます。
+
+```yaml
+readAt: 2026-08-10
+```
+
+`Reading History`には読んだ日，範囲，理解できたこと，次に確認することを追記します。Frontmatterの`history`は読書履歴ではなく，サイト上での公開・更新履歴です。
+
 ## Projects
 
 完成した制作物や継続中のプロジェクトを紹介する場所です。
@@ -192,6 +242,7 @@ npm run new:devlog -- bulletin-board-auth
 読者が同じ結果を再現するための記事か？
 ├─ はい → Guide
 └─ いいえ
+   ├─ 読んだ資料の要点や考察か？ → Reading
    ├─ 一日を単位にした記録か？ → Devlog / 日誌
    ├─ 特定の作業や問題の記録か？ → Devlog / 作業記録
    └─ 作ったものの紹介か？ → Projects
@@ -202,7 +253,9 @@ Guideとして書き始めても，検証が終わらなければDevlogへ移し
 ## 公開前チェック
 
 - `draft: false`へ変更した
-- 日付と`kind`が正しく，作業記録では`status`も正しい
+- 日付と記事種別が正しい
+- DevlogとReadingでは`status`が内容と一致している
+- Readingを読み終えた場合は`readAt`を入れた
 - 秘密情報が含まれていない
 - 内部リンクと外部リンクを開ける
 - コマンドと手順を確認した
