@@ -11,10 +11,11 @@ const settings = {
   devlog: { template: 'devlog.md', directory: 'devlog' },
   journal: { template: 'journal.md', directory: 'devlog' },
   reading: { template: 'reading.md', directory: 'reading' },
+  'reading-deep': { template: 'reading-deep.md', directory: 'reading' },
 };
 
 if (!Object.hasOwn(settings, contentType)) {
-  console.error('記事種別は guide、devlog、journal、reading のいずれかを指定してください。');
+  console.error('記事種別は guide、devlog、journal、reading、reading-deep のいずれかを指定してください。');
   process.exit(1);
 }
 

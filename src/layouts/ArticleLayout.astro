@@ -4,7 +4,7 @@ import CodeCopy from '../components/CodeCopy.astro';
 import LikeButton from '../components/LikeButton.astro';
 import BaseLayout from './BaseLayout.astro';
 import { formatDate, formatDateTime } from '../lib/content';
-import { getReadingSourceTypeLabel } from '../lib/reading-source-types';
+import { getReadingSourceTypeLabel, getReadingStatusLabel } from '../lib/reading-source-types';
 import '../styles/article.css';
 
 interface ArticleLink {
@@ -33,6 +33,12 @@ const sectionPath = isGuide ? 'guides' : isReading ? 'reading' : 'devlog';
 const canonicalPath = `/${sectionPath}/${entry.id}/`;
 const readingSourceLabel = 'sourceType' in data ? getReadingSourceTypeLabel(data.sourceType) : undefined;
 const readAt = 'sourceType' in data ? data.readAt : undefined;
+const readingStatus = 'sourceType' in data ? data.status : undefined;
+const readingStatusLabel = readingStatus
+  ? getReadingStatusLabel(readingStatus)
+  : readAt
+    ? '読了'
+    : '読書中';
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': isJournal ? 'BlogPosting' : isReading ? 'Article' : 'TechArticle',
@@ -91,20 +97,19 @@ const structuredData = {
             <dd>{readingSourceLabel}</dd>
           </div>
         )}
-        {isReading && (
-          readAt ? (
-            <div>
-              <dt>読了</dt>
-              <dd><time datetime={readAt.toISOString()}>{formatDate(readAt)}</time></dd>
-            </div>
-          ) : (
-            <div>
-              <dt>状態</dt>
-              <dd>読書中</dd>
-            </div>
-          )
+        {isReading && readAt && (
+          <div>
+            <dt>読了</dt>
+            <dd><time datetime={readAt.toISOString()}>{formatDate(readAt)}</time></dd>
+          </div>
         )}
-        {'status' in data && (
+        {isReading && (
+          <div>
+            <dt>状態</dt>
+            <dd>{readingStatusLabel}</dd>
+          </div>
+        )}
+        {!isReading && 'status' in data && (
           <div>
             <dt>状態</dt>
             <dd>{data.status}</dd>

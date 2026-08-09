@@ -15,7 +15,8 @@
     "new:guide": "node scripts/new-content.mjs guide",
     "new:devlog": "node scripts/new-content.mjs devlog",
     "new:journal": "node scripts/new-content.mjs journal",
-    "new:reading": "node scripts/new-content.mjs reading"
+    "new:reading": "node scripts/new-content.mjs reading",
+    "new:reading:deep": "node scripts/new-content.mjs reading-deep"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

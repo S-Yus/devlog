@@ -78,13 +78,19 @@ npm run new:journal -- 2026-08-07-cloudflare-settings
 
 日誌は`YYYY-MM-DD`または`YYYY-MM-DD-topic`，作業記録は内容を表すslugを使用します。どちらも`src/content/devlog/`へ生成され，Frontmatterの`kind`で区別されます。
 
-論文，技術記事，公式資料の読書メモは次のコマンドで作成します。
+論文，技術記事，公式資料の読書メモは次のコマンドで作成します。通常は要点だけを残す「ざっくり読み」を使います。
 
 ```bash
 npm run new:reading -- performance-law-of-large-language-models
 ```
 
-`src/content/reading/performance-law-of-large-language-models.md`が生成されます。`sourceType`は`paper`，`article`，`documentation`から選びます。`readAt`は読書中なら空欄のまま，読み終えたら`YYYY-MM-DD`形式で読了日を入れます。空欄の記事には自動で「読書中」と表示されます。
+メソッド，実験条件，限界，関連論文まで整理する「がっつり読み」は次を使います。
+
+```bash
+npm run new:reading:deep -- performance-law-of-large-language-models
+```
+
+`src/content/reading/performance-law-of-large-language-models.md`が生成されます。`sourceType`は`paper`，`article`，`documentation`から選びます。`status`は`unread`，`skimmed`，`read`，`deep-read`から選びます。`readAt`は読書中なら空欄のまま，読み終えたら`YYYY-MM-DD`形式で読了日を入れます。
 
 どちらも作成直後は`draft: true`です。本文を編集し，公開準備ができたらFrontmatterを次のように変更します。
 

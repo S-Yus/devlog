@@ -3,7 +3,7 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { DEVLOG_KIND_VALUES } from './lib/devlog-kinds';
 import { GUIDE_CATEGORY_VALUES } from './lib/guide-categories';
-import { READING_SOURCE_TYPE_VALUES } from './lib/reading-source-types';
+import { READING_SOURCE_TYPE_VALUES, READING_STATUS_VALUES } from './lib/reading-source-types';
 
 const historySchema = z
   .array(
@@ -103,6 +103,7 @@ const reading = defineCollection({
       sourceTitle: z.string().min(1),
       sourceUrl: z.url(),
       authors: z.array(z.string().min(1)),
+      status: z.enum(READING_STATUS_VALUES).optional(),
       readAt: z.preprocess(
         (value) =>
           value == null || (typeof value === 'string' && value.trim() === '')
