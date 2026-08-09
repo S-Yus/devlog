@@ -104,7 +104,10 @@ const reading = defineCollection({
       sourceUrl: z.url(),
       authors: z.array(z.string().min(1)),
       readAt: z.preprocess(
-        (value) => (value === null || value === '' ? undefined : value),
+        (value) =>
+          value == null || (typeof value === 'string' && value.trim() === '')
+            ? undefined
+            : value,
         z.coerce.date().optional(),
       ),
       tags: z.array(z.string().min(1)),
