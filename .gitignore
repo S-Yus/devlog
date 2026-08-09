@@ -8,3 +8,4 @@ dist/
 .env.*
 !.env.example
 HowToUse.md
+CONTENT_GUIDE.md
