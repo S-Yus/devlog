@@ -111,6 +111,18 @@
   overflow-wrap: anywhere;
 }
 
+.article-body .katex {
+  font-size: 1.05em;
+}
+
+.article-body .katex-display {
+  max-width: 100%;
+  margin-block: 1.5rem;
+  padding-block: 0.25rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 .article-body pre {
   max-width: 100%;
   margin: 0;
