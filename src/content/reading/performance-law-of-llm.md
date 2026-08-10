@@ -16,7 +16,7 @@ tags:
   - 読書
   - ざっくり読み
 history: []
-draft: true
+draft: false
 ---
 ※注意: ChatGPTによる日本語翻訳と並行して読んだので，原文の用語に相当する日本語が正しいかは未検証。
 ## 要点
