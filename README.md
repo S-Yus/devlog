@@ -98,7 +98,7 @@ npm run new:reading:deep -- performance-law-of-large-language-models
 draft: false
 ```
 
-Guideでは手順を実際に再検証したうえで，必要に応じて`status: verified`へ変更します。公開時は`history`に初版公開の日時と内容を追加し，以後の更新も古い順に追記します。Frontmatterの必須項目や列挙値に誤りがあると型検査またはビルドが失敗します。
+Guideでは手順を実際に再検証したうえで，必要に応じて`status: verified`へ変更します。公開時は`draft: false`に変更した後，`npm run history -- 記事パス`で更新履歴を生成します。Frontmatterの必須項目や列挙値に誤りがあると型検査またはビルドが失敗します。
 
 ```yaml
 history:
@@ -109,6 +109,14 @@ history:
 ```
 
 `draft: false`の記事には1件以上の履歴が必要です。時刻には日本時間の`+09:00`まで記録してください。
+
+更新履歴は直前のGitコミットとの差分から自動生成できます。
+
+```bash
+npm run history -- src/content/reading/article-slug.md
+```
+
+`--dry-run`を付けるとファイルを変更せず判定結果だけ表示します。句読点，空白，見出し階層，コメント，正規化後40文字未満の本文修正は無視します。コード，数式，URL，数値，重要表現の変更は短くても記録します。
 
 ## 検査と本番ビルド
 
