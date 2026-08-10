@@ -8,15 +8,16 @@ sourceUrl: "https://arxiv.org/abs/2408.09895"
 authors:
   - "Chuhan Wu"
   - "Ruiming Tang"
-status: skimmed
+status: read
 # unread | skimmed | read | deep-read
 # 読み終えたら YYYY-MM-DDを入力。途中なら空欄のまま。
 readAt: 2026-08-07
 tags:
   - 読書
-  - ざっくり読み
 history: 
   - at: "2026-08-10T11:52:08+09:00"
+    summary: "初版公開"
+  - at: "2026-08-10T12:14:00+09:00"
     summary: "初版公開"
 draft: false
 ---
