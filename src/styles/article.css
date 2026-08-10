@@ -111,6 +111,11 @@
   overflow-wrap: anywhere;
 }
 
+.article-body em {
+  font-style: italic;
+  font-synthesis: style;
+}
+
 .article-body .katex {
   font-size: 1.05em;
 }
